@@ -1,3 +1,11 @@
+# environment variables
+.*
+
+# node modules because no one wants that on GitHub
+node_modules/
+
+.vscode/
+
 # Logs
 logs
 *.log
