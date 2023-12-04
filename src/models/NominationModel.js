@@ -1,12 +1,11 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
 
 // Award categories used for non-instant thanks
 const awardEnum = ['Say/Do', 'Commitment', 'Collborate', 'Challenging', 'Learning', 'Spirited']
 
 const NominationSchema = new mongoose.Schema({
     // ID of the nominee - to come from User Collection
-    nomineeId: {
+    nomineeUser: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true
@@ -39,7 +38,7 @@ const NominationSchema = new mongoose.Schema({
     },
     // nominationValue is required if nomination is not instant thanks; selected from array of enums
     nominationValue: {
-      type: String,
+      type: awardEnum,
       required: function() {
         return !this.isNominationInstant;
         },
@@ -64,7 +63,7 @@ const NominationSchema = new mongoose.Schema({
     }
 });
 
-const Nomination = mmongoose.model('Nomination', NominationSchema);
+const Nomination = mongoose.model('Nomination', NominationSchema);
 
 module.exports = {
   Nomination
