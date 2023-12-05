@@ -10,7 +10,25 @@ async function databaseConnect(){
 	} catch (error) {
 		console.warn(`=== ERROR ===\ndatabaseConnect failed to connect to DB:\n${JSON.stringify(error)}\n===`);
 	}
-}
+};
+
+async function databaseClose(){
+	try {
+		await mongoose.connection.close();
+		console.log("Database closed");
+	} catch (error) {
+		console.warn(`=== ERROR ===\ndatabaseClose failed to close DB connection:\n${JSON.stringify(error)}\n===`);
+	}
+};
+
+async function databaseDrop(){
+	try {
+		await mongoose.connection.dropDatabase();
+		console.log("Database dropped");
+	} catch (error) {
+		console.warn(`=== ERROR ===\ndatabaseDrop failed to drop DB:\n${JSON.stringify(error)}\n===`);
+	}
+};
 
 module.exports = {
 	databaseConnect
