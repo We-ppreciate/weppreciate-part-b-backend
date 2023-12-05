@@ -4,16 +4,19 @@ const NominationSchema = new mongoose.Schema({
   nominationId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Nomination',
-    required: true
+    // TODO: Change required dependency after testing
+    required: false
   },
   commenter_Id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true
+    // TODO: Change required dependency after testing
+    required: false
   },
 	commentBody: {
     type: String,
-    required: [true, "You must enter a comment."]
+    // TODO: Change required dependency after testing
+    required: [false, "You must enter a comment."]
   } 
 
 })

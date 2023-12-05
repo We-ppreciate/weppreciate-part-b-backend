@@ -1,29 +1,47 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+// const bcrypt = require('bcrypt');
 
 const UserSchema = new mongoose.Schema({
+  upn: {
+    type: String,
+    //TODO: Change required dependency after testing
+    required: false,
+    // required: [true, 'UPN is missing.'],
+    lowercase: true,
+    trim: true
+  },
   email: {
     type: String,
-    required: [true, 'Email is missing.'],
+    // TODO: Change required dependency after testing
+    required: false,
+    // required: [true, 'Email is missing.'],
+    unique: false,
+    // 
     unique: true,
     lowercase: true,
     trim: true
   },
   name: {
     type: String,
-    required: [true, 'Name is missing.'],
+    // TODO: Change required dependency after testing
+    required: false,
+    // required: [true, 'Name is missing.'],
     unique: false,
     trim: true
   },
   businessUnit: {
     type: String,
-    required: [true, 'Business Unit is missing.'],
+    // TODO: Change required dependency after testing
+    required: false,
+    // required: [true, 'Business Unit is missing.'],
     unique: false,
     trim: true
   },
   passwordHash: {
     type: String,
-    required: [true, 'Password is missing.'],
+    // TODO: Change required dependency after testing
+    required: false,
+    // required: [true, 'Password is missing.'],
     unique: false
   },
   // TODO: Change this to ObjectId
@@ -50,22 +68,30 @@ const UserSchema = new mongoose.Schema({
   },
   isFullUser: {
     type: Boolean,
-    required: true,
+    // TODO: Change required dependency after testing
+    required: false,
+    // required: true,
     default: true
   },
   isLineManager: {
     type: Boolean,
-    required: true,
+    // TODO: Change required dependency after testing
+    required: false,
+    // required: true,
     default: false
   },
   isSeniorManager: {
     type: Boolean,
-    required: true,
+    // TODO: Change required dependency after testing
+    required: false,
+    // required: true,
     default: false
   },
   isAdmin: {
     type: Boolean,
-    required: true,
+    // TODO: Change required dependency after testing
+    required: false,
+    // required: true,
     default: false
   },
 });

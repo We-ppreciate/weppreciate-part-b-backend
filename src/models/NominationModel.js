@@ -8,58 +8,71 @@ const NominationSchema = new mongoose.Schema({
     nomineeUser: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-      required: true
+      // TODO: Change required dependency after testing
+      required: false
+      // required: true
     },
     // Boolean on whether the nominator is a full user - determines requirements for nominatorEmail and nominatorName
     isNominatorFullUser: {
       type: Boolean,
+      // TODO: Change required dependency after testing
       required: true,
+      // required: true,
       default: false
     },
     // nominatorEmail is required if nominator is not a full user
     nominatorEmail: {
       type: String,
-      required: function() {
-        return !this.isNominatorFullUser;
-        }
+      // TODO: Change required dependency after testing
+      // required: function() {
+      //   return !this.isNominatorFullUser;
+      //   }
     },
     // nominatorName is required if nominator is not a full user
     nominatorName: {
       type: String,
-      required: function() {
-        return !this.isNominatorFullUser;
-        }
+      // TODO: Change required dependency after testing
+      // required: function() {
+      //   return !this.isNominatorFullUser;
+      //   }
     },
     // Determines if nomination is instant thanks, or for an award
     isNominationInstant: {
       type: Boolean,
-      required: true,
+      // TODO: Change required dependency after testing
+      required: false,
+      // required: true,
       default: true
     },
     // nominationValue is required if nomination is not instant thanks; selected from array of enums
     nominationValue: {
       type: awardEnum,
-      required: function() {
-        return !this.isNominationInstant;
-        },
-      enum: awardEnum
+      // TODO: Change required dependency after testing
+      // required: function() {
+      //   return !this.isNominationInstant;
+      //   },
     },
     // Nomination body field - reason for the nomination
     nominationBody: {
       type: String,
-      required: true
+      // TODO: Change required dependency after testing
+      required: false,
+      // required: true,
     },
     // Allows Senior Manager to promote nomination to award, if isNominationInstant is false
     isAward: {
       type: Boolean,
-      required: function() {
-        return !this.isNominationInstant;
-        },
+      // TODO: Change required dependency after testing
+      // required: function() {
+      //   return !this.isNominationInstant;
+      //   },
       default: false
     },
     isReleased: {
       type: Boolean,
-      default: false
+      // TODO Change required dependency after testing
+      required: false,
+      default: false,
     }
 });
 
