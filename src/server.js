@@ -1,6 +1,7 @@
 
 const express = require('express');
 
+
 // make a server instance 
 const app = express();
 
@@ -17,6 +18,7 @@ app.get("/", (request, response) => {
 const { User } = require('./models/UserModel');
 
 const UserRouter = require('./controllers/UserController');
+const { logToFile } = require('./functions/logToFile');
 app.use('/users', UserRouter);
 
 

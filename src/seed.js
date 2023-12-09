@@ -16,7 +16,10 @@ const { logToFile } = require('./functions/logToFile');
 
 // {
 //   _id: objectId,
-//   name: string,
+//   name: {
+//    first: string,
+//    last: string
+//   },
 //   email: string
 //   businessUnit: string,
 //   passwordHash: string,
@@ -37,7 +40,10 @@ databaseConnect().then(async () => {
   
   const natePicone = new User({
     _id: new mongoose.Types.ObjectId(),
-    name: "Nate Picone",
+    name: {
+      first: "Nate",
+      last: "Picone"
+    },
     email: `nate.picone@yourcompany.com`,
     businessUnit: "Business Services",
     passwordHash: "replacethiswithhash",
@@ -58,7 +64,10 @@ databaseConnect().then(async () => {
 
   const edDougherty = new User({
     id: new mongoose.Types.ObjectId(),
-    name: "Ed Dougherty",
+    name: {
+      first: "Ed",
+      last: "Dogherty"
+    },
     email: `ed.dougherty@yourcompany.com`,
     businessUnit: "Business Services",
     passwordHash: "replacethiswithhash",
@@ -79,7 +88,10 @@ databaseConnect().then(async () => {
 
   const hannahSallows = new User({
     id: new mongoose.Types.ObjectId(),
-    name: "Hannah Sallows",
+    name: {
+      first: "Hannah",
+      last: "Sallows"
+    },
     email: `Hannah.Sallows@yourcompany.com`,
     businessUnit: "Business Services",
     passwordHash: "replacethiswithhash",
@@ -100,7 +112,10 @@ databaseConnect().then(async () => {
 
   const katieLock = new User({
     id: new mongoose.Types.ObjectId(),
-    name: "Katie Lock",
+    name: {
+      first: "Katie",
+      last: "Lock"
+    },
     email: `Katie.Lock@yourcompany.com`,
     businessUnit: "HR Business Partnership",
     passwordHash: "replacethiswithhash",
@@ -117,6 +132,30 @@ databaseConnect().then(async () => {
 
   await katieLock.save().then(() => {
     logToFile(`seed.js: ${katieLock.name} saved, with id ${katieLock._id}\n${katieLock}`);
+  });
+
+  const jordanBenjamin = new User({
+    id: new mongoose.Types.ObjectId(),
+    name: {
+      first: "Jordan",
+      last: "Benjamin"
+    },
+    email: `Jordan.Benjamin@yourcompany.com`,
+    businessUnit: "Art",
+    passwordHash: "replacethiswithhash",
+    lineManagerId: null,
+    userTagLine: "Creating Beautiful things",
+    userPhotoKey: 'replacewithURL',
+    isFullUser: false,
+    isLineManager: false,
+    isSeniorManager: false,
+    isAdmin: false,
+  });
+
+  jordanBenjamin.upn = jordanBenjamin.email.split('@')[0];
+
+  await jordanBenjamin.save().then(() => {
+    logToFile(`seed.js: ${jordanBenjamin.name} saved, with id ${jordanBenjamin._id}\n${jordanBenjamin}`);
   });
 
   // Update line manager details
@@ -142,7 +181,10 @@ databaseConnect().then(async () => {
   //   nominatorFullUser: User Object,
   //   isNominatorFullUser: Boolean,
   //   nominatorBasicUser: {
-  //     basicName: String,
+  //     basicName: {
+  //       first: String,
+  //       last: String
+  //     },
   //     basicEmail: String,
   //   },
   //   isNominationInstant: Boolean,
@@ -178,7 +220,10 @@ databaseConnect().then(async () => {
     nomineeUser: edDougherty,
     nominatorFullUser: null,
     nominatorBasicUser: {
-      basicName: 'Naomi SkyCaptain',
+      basicName: {
+        first: "Naomi",
+        last: "SkyCaptain",
+      },
       basicEmail: 'naomi.skycaptain@yourcompany.com',
     },
     nominationValue: "Challenging",

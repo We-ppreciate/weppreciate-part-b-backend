@@ -22,12 +22,22 @@ const UserSchema = new mongoose.Schema({
     trim: true
   },
   name: {
-    type: String,
-    // TODO: Change required dependency after testing
-    required: false,
-    // required: [true, 'Name is missing.'],
-    unique: false,
-    trim: true
+    first: {
+      type: String,
+      // TODO: Change required dependency after testing
+      required: false,
+      // required: [true, 'Name is missing.'],
+      unique: false,
+      trim: true,
+    },
+    last: {
+      type: String,
+      // TODO: Change required dependency after testing
+      required: false,
+      // required: [true, 'Name is missing.'],
+      unique: false,
+      trim: true,
+    }
   },
   businessUnit: {
     type: String,

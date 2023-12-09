@@ -19,8 +19,14 @@ const NominationSchema = new mongoose.Schema({
     },
     nominatorBasicUser: {
       basicName: {
-        type: String,
-        required: false
+        first: {
+          type: String,
+          required: false
+        },
+        last: {
+          type: String,
+          required: false
+        }
       },
       basicEmail: {
         type: String,
