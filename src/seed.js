@@ -8,10 +8,26 @@ const { Comments } = require('./models/CommentModel');
 const { logToFile } = require('./functions/logToFile');
 
 /*
+  USER SEED DATA
+
   This file is used to seed the database with some initial data.
   TODO: MAKE DRY
 */
 
+// {
+//   _id: objectId,
+//   name: string,
+//   email: string
+//   businessUnit: string,
+//   passwordHash: string,
+//   lineManagerId: null, -> is added later, after line manager created
+//   userTagLine: string,
+//   userPhotoKey: stirng,
+//   isFullUser: boolean,
+//   isLineManager: boolean,
+//   isSeniorManager: boolean,
+//   isAdmin: boolean,
+// }
 
 databaseConnect().then(async () => {
   logToFile("=== seed.js executed ===");
@@ -132,26 +148,54 @@ databaseConnect().then(async () => {
   //   isNominationInstant: Boolean,
   //   nominationValue: awardEnum
   //   nominationBody: String,
+  //   nominationDate: Date,
   //   isAward: Boolean,
   //   isReleased: Boolean,
+  //   releaseDate: Date,
   // }
 
   const instantNate = new Nomination({
     _id: new mongoose.Types.ObjectId(),
     nomineeUser: natePicone,
     nominatorFullUser: edDougherty,
-    isNominatorFullUser: true,
     nominatorBasicUser: null,
-    isNominationInstant: true,
     nominationValue: "Commitment",
     nominationBody: "Nate is a great guy!",
+    nominationDate: "2023-12-09",
+    isNominatorFullUser: true,
     isAward: false,
+    isNominationInstant: true,
     isReleased: false,
+    releaseDate: null
   });
 
   await instantNate.save().then(() => {
     logToFile(`seed.js: Award for ${instantNate.nomineeUser.name} saved, with id ${instantNate._id}\n${instantNate}`);
   });
+
+  const nominateEd = new Nomination({
+    _id: new mongoose.Types.ObjectId(),
+    nomineeUser: edDougherty,
+    nominatorFullUser: null,
+    nominatorBasicUser: {
+      basicName: 'Naomi SkyCaptain',
+      basicEmail: 'naomi.skycaptain@yourcompany.com',
+    },
+    nominationValue: "Challenging",
+    nominationBody: "Ed is a challenger!",
+    nominationDate: "2023-12-10",
+    isNominationInstant: false,
+    isNominatorFullUser: false,
+    isAward: false,
+    isReleased: false,
+    releaseDate: null
+  });
+
+  await nominateEd.save().then(() => {
+    logToFile(`seed.js: Award for ${nominateEd.nomineeUser.name} saved, with id ${nominateEd._id}\n${nominateEd}`);
+  });  
+
+  /* TO DO: COMMENT SEED DATA */
 
   databaseClose();
 
