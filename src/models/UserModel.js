@@ -61,7 +61,9 @@ const UserSchema = new mongoose.Schema({
   // TODO: Insert other fields here
   /* */
   // TODO: Link user's _id to photo on S3/Google Storage
-  userPhoto: {
+//     KL note: there was a code conflict here, included the version from node-boiler-plate branch
+  userPhotoKey: {
+
     type: String,
     required: false,
     unique: false
