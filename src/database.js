@@ -1,35 +1,40 @@
 
 const mongoose = require('mongoose');
+const { logToFile } = require('./functions/logToFile');
+require('dotenv').config();
 
 async function databaseConnect(){
 	try {
 		// DB connection can take some time, eg. if DB is in the cloud 
-		console.log(`Connecting to:\n[login details]@${process.env.DB_PART_URI}`);
+		logToFile(`database.js: Connecting to: [login details]@${process.env.DB_PART_URI}`);
 		await mongoose.connect(process.env.DB_URI);
-		console.log("Database connected");
+		logToFile("database.js: Database connected");
 	} catch (error) {
-		console.warn(`=== ERROR ===\ndatabaseConnect failed to connect to DB:\n${JSON.stringify(error)}\n===`);
+		logToFile(`database.js: === ERROR ===\ndatabaseConnect failed to connect to DB:\n${JSON.stringify(error)}\n===`);
 	}
 };
 
 async function databaseClose(){
 	try {
 		await mongoose.connection.close();
-		console.log("Database closed");
+		logToFile("database.js: Database closed");
+		logToFile("database.js: === END ===");
 	} catch (error) {
-		console.warn(`=== ERROR ===\ndatabaseClose failed to close DB connection:\n${JSON.stringify(error)}\n===`);
+		logToFile(`database.js: === ERROR ===\ndatabaseClose failed to close DB connection:\n${JSON.stringify(error)}\n===`);
 	}
 };
 
-async function databaseDrop(){
+async function databaseCollectionDrop(param){
 	try {
-		await mongoose.connection.dropDatabase();
-		console.log("Database dropped");
+		await mongoose.connection.dropCollection();
+		logToFile("Collection dropped");
 	} catch (error) {
-		console.warn(`=== ERROR ===\ndatabaseDrop failed to drop DB:\n${JSON.stringify(error)}\n===`);
+		logToFile(`database.js: === ERROR ===\ndatabaseCollectionDrop failed to drop Collection:\n${JSON.stringify(error)}\n===`);
 	}
 };
 
 module.exports = {
-	databaseConnect
+	databaseConnect,
+	databaseClose,
+	databaseCollectionDrop
 }

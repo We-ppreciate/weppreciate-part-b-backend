@@ -12,6 +12,21 @@ const NominationSchema = new mongoose.Schema({
       required: false
       // required: true
     },
+    nominatorFullUser: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: false    
+    },
+    nominatorBasicUser: {
+      basicName: {
+        type: String,
+        required: false
+      },
+      basicEmail: {
+        type: String,
+        required: false
+      },
+    },
     // Boolean on whether the nominator is a full user - determines requirements for nominatorEmail and nominatorName
     isNominatorFullUser: {
       type: Boolean,
@@ -19,22 +34,6 @@ const NominationSchema = new mongoose.Schema({
       required: true,
       // required: true,
       default: false
-    },
-    // nominatorEmail is required if nominator is not a full user
-    nominatorEmail: {
-      type: String,
-      // TODO: Change required dependency after testing
-      // required: function() {
-      //   return !this.isNominatorFullUser;
-      //   }
-    },
-    // nominatorName is required if nominator is not a full user
-    nominatorName: {
-      type: String,
-      // TODO: Change required dependency after testing
-      // required: function() {
-      //   return !this.isNominatorFullUser;
-      //   }
     },
     // Determines if nomination is instant thanks, or for an award
     isNominationInstant: {
