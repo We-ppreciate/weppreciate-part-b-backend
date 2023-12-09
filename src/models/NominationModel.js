@@ -11,6 +11,9 @@ const NominationSchema = new mongoose.Schema({
       // TODO: Change required dependency after testing
       required: false
       // required: true
+      
+   
+     //     KL note: there was a code conflict here, included the version from node-boiler-plate branch
     },
     nominatorFullUser: {
       type: mongoose.Schema.Types.ObjectId,
@@ -26,6 +29,7 @@ const NominationSchema = new mongoose.Schema({
         type: String,
         required: false
       },
+
     },
     // Boolean on whether the nominator is a full user - determines requirements for nominatorEmail and nominatorName
     isNominatorFullUser: {
@@ -35,6 +39,9 @@ const NominationSchema = new mongoose.Schema({
       // required: true,
       default: false
     },
+  
+  //     KL note: there was a code conflict here, included the version from node-boiler-plate branch
+
     // Determines if nomination is instant thanks, or for an award
     isNominationInstant: {
       type: Boolean,
