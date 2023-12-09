@@ -1,7 +1,6 @@
 require('dotenv').config();
 
 const mongoose = require('mongoose');
-//     KL note: there was a code conflict here, included the version from node-boiler-plate branch
 const { databaseConnect, databaseClose } = require('./database');
 const { User } = require('./models/UserModel');
 const { Nomination } = require('./models/NominationModel');
@@ -10,13 +9,32 @@ const { logToFile } = require('./functions/logToFile');
 
 
 /*
+  USER SEED DATA
+
   This file is used to seed the database with some initial data.
   TODO: MAKE DRY
 */
 
 
+// {
+//   _id: objectId,
+//   name: {
+//    first: string,
+//    last: string
+//   },
+//   email: string
+//   businessUnit: string,
+//   passwordHash: string,
+//   lineManagerId: null, -> is added later, after line manager created
+//   userTagLine: string,
+//   userPhotoKey: stirng,
+//   isFullUser: boolean,
+//   isLineManager: boolean,
+//   isSeniorManager: boolean,
+//   isAdmin: boolean,
+// }
+
 databaseConnect().then(async () => {
-//     KL note: there was a code conflict here, included the version from node-boiler-plate branch
   logToFile("=== seed.js executed ===");
   logToFile("seed,js: Creating user seed data!");
 
@@ -25,13 +43,16 @@ databaseConnect().then(async () => {
   
   const natePicone = new User({
     _id: new mongoose.Types.ObjectId(),
-    name: "Nate Picone",
+    name: {
+      first: "Nate",
+      last: "Picone"
+    },
+
     email: `nate.picone@yourcompany.com`,
     businessUnit: "Business Services",
     passwordHash: "replacethiswithhash",
     lineManagerId: null,
     userTagLine: "Tell me your access issue and I will make it go away.",
-//     KL note: there was a code conflict here, included the version from node-boiler-plate branch
     userPhotoKey: 'replacewithURL',
 
     isFullUser: true,
@@ -43,22 +64,22 @@ databaseConnect().then(async () => {
   natePicone.upn = natePicone.email.split('@')[0];
 
   await natePicone.save().then(() => {
-//     KL note: there was a code conflict here, included the version from node-boiler-plate branch
     logToFile(`seed.js: ${natePicone.name} saved, with id ${natePicone._id}\n${natePicone}`);
   });
 
   const edDougherty = new User({
-
     id: new mongoose.Types.ObjectId(),
-    name: "Ed Dougherty",
+    name: {
+      first: "Ed",
+      last: "Dogherty"
+    },
+
     email: `ed.dougherty@yourcompany.com`,
     businessUnit: "Business Services",
     passwordHash: "replacethiswithhash",
     lineManagerId: null,
     userTagLine: "Building a better tomorrow, today.",
-//     KL note: there was a code conflict here, included the version from node-boiler-plate branch
     userPhotoKey: 'replacewithURL',
-
     isFullUser: true,
     isLineManager: true,
     isSeniorManager: false,
@@ -68,22 +89,21 @@ databaseConnect().then(async () => {
   edDougherty.upn = edDougherty.email.split('@')[0];
 
   await edDougherty.save().then(() => {
-//     KL note: there was a code conflict here, included the version from node-boiler-plate branch
     logToFile(`seed.js: ${edDougherty.name} saved, with id ${edDougherty._id}\n${edDougherty}`);
   });
 
   const hannahSallows = new User({
-
     id: new mongoose.Types.ObjectId(),
-    name: "Hannah Sallows",
+    name: {
+      first: "Hannah",
+      last: "Sallows"
+    },
     email: `Hannah.Sallows@yourcompany.com`,
     businessUnit: "Business Services",
     passwordHash: "replacethiswithhash",
     lineManagerId: null,
     userTagLine: "Working collaboratively for moments that matter.",
-//     KL note: there was a code conflict here, included the version from node-boiler-plate branch
     userPhotoKey: 'replacewithURL',
-
     isFullUser: true,
     isLineManager: true,
     isSeniorManager: true,
@@ -93,22 +113,21 @@ databaseConnect().then(async () => {
   hannahSallows.upn = hannahSallows.email.split('@')[0];
 
   await hannahSallows.save().then(() => {
-//     KL note: there was a code conflict here, included the version from node-boiler-plate branch
     logToFile(`seed.js: ${hannahSallows.name} saved, with id ${hannahSallows._id}\n${hannahSallows}`);
   });
 
   const katieLock = new User({
-
     id: new mongoose.Types.ObjectId(),
-    name: "Katie Lock",
+    name: {
+      first: "Katie",
+      last: "Lock"
+    },
     email: `Katie.Lock@yourcompany.com`,
     businessUnit: "HR Business Partnership",
     passwordHash: "replacethiswithhash",
     lineManagerId: null,
     userTagLine: "Helping people achieve their goals.",
-//     KL note: there was a code conflict here, included the version from node-boiler-plate branch
     userPhotoKey: 'replacewithURL',
-
     isFullUser: true,
     isLineManager: false,
     isSeniorManager: false,
@@ -118,8 +137,31 @@ databaseConnect().then(async () => {
   katieLock.upn = katieLock.email.split('@')[0];
 
   await katieLock.save().then(() => {
-//     KL note: there was a code conflict here, included the version from node-boiler-plate branch
     logToFile(`seed.js: ${katieLock.name} saved, with id ${katieLock._id}\n${katieLock}`);
+  });
+
+  const jordanBenjamin = new User({
+    id: new mongoose.Types.ObjectId(),
+    name: {
+      first: "Jordan",
+      last: "Benjamin"
+    },
+    email: `Jordan.Benjamin@yourcompany.com`,
+    businessUnit: "Art",
+    passwordHash: "replacethiswithhash",
+    lineManagerId: null,
+    userTagLine: "Creating Beautiful things",
+    userPhotoKey: 'replacewithURL',
+    isFullUser: false,
+    isLineManager: false,
+    isSeniorManager: false,
+    isAdmin: false,
+  });
+
+  jordanBenjamin.upn = jordanBenjamin.email.split('@')[0];
+
+  await jordanBenjamin.save().then(() => {
+    logToFile(`seed.js: ${jordanBenjamin.name} saved, with id ${jordanBenjamin._id}\n${jordanBenjamin}`);
   });
 
   // Update line manager details
@@ -128,56 +170,86 @@ databaseConnect().then(async () => {
     logToFile(`seed.js: ${natePicone.name} updated, with line manager`);
   } catch (error) {
     logToFile(`seed.js: ${error}`);
-
   }    
 
   try {
     await User.findOneAndUpdate({ _id: edDougherty._id }, { lineManagerId: hannahSallows._id }, { new: true });
-//     KL note: there was a code conflict here, included the version from node-boiler-plate branch
     logToFile(`seed.js: ${edDougherty.name} updated, with line manager`);
   } catch (error) {
     logToFile(`seed.js: ${error}`);
-
   }  
   
 
   /* NOMINATION SEED DATA */
 
-//     KL note: there was a code conflict here, included the version from node-boiler-plate branch
+  
   // { 
   //   nomineeUser: User Object,
   //   nominatorFullUser: User Object,
   //   isNominatorFullUser: Boolean,
   //   nominatorBasicUser: {
-  //     basicName: String,
+  //     basicName: {
+  //       first: String,
+  //       last: String
+  //     },
   //     basicEmail: String,
   //   },
   //   isNominationInstant: Boolean,
   //   nominationValue: awardEnum
   //   nominationBody: String,
+  //   nominationDate: Date,
   //   isAward: Boolean,
   //   isReleased: Boolean,
+  //   releaseDate: Date,
   // }
 
   const instantNate = new Nomination({
     _id: new mongoose.Types.ObjectId(),
     nomineeUser: natePicone,
     nominatorFullUser: edDougherty,
-    isNominatorFullUser: true,
     nominatorBasicUser: null,
-    isNominationInstant: true,
     nominationValue: "Commitment",
     nominationBody: "Nate is a great guy!",
+    nominationDate: "2023-12-09",
+    isNominatorFullUser: true,
     isAward: false,
+    isNominationInstant: true,
     isReleased: false,
+    releaseDate: null
   });
 
   await instantNate.save().then(() => {
     logToFile(`seed.js: Award for ${instantNate.nomineeUser.name} saved, with id ${instantNate._id}\n${instantNate}`);
   });
 
-  databaseClose();
+  const nominateEd = new Nomination({
+    _id: new mongoose.Types.ObjectId(),
+    nomineeUser: edDougherty,
+    nominatorFullUser: null,
+    nominatorBasicUser: {
+      basicName: {
+        first: "Naomi",
+        last: "SkyCaptain",
+      },
+      basicEmail: 'naomi.skycaptain@yourcompany.com',
+    },
+    nominationValue: "Challenging",
+    nominationBody: "Ed is a challenger!",
+    nominationDate: "2023-12-10",
+    isNominationInstant: false,
+    isNominatorFullUser: false,
+    isAward: false,
+    isReleased: false,
+    releaseDate: null
+  });
 
+  await nominateEd.save().then(() => {
+    logToFile(`seed.js: Award for ${nominateEd.nomineeUser.name} saved, with id ${nominateEd._id}\n${nominateEd}`);
+  });  
+
+  /* TO DO: COMMENT SEED DATA */
+
+  databaseClose();
 
 });
 

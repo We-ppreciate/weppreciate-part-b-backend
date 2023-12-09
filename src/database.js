@@ -17,9 +17,7 @@ async function databaseConnect(){
 async function databaseClose(){
 	try {
 		await mongoose.connection.close();
-    
-    //     KL note: there was a code conflict here, included the version from node-boiler-plate branch
-    
+
 		logToFile("database.js: Database closed");
 		logToFile("database.js: === END ===");
 	} catch (error) {

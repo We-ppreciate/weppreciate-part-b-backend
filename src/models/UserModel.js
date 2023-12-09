@@ -22,12 +22,23 @@ const UserSchema = new mongoose.Schema({
     trim: true
   },
   name: {
-    type: String,
-    // TODO: Change required dependency after testing
-    required: false,
-    // required: [true, 'Name is missing.'],
-    unique: false,
-    trim: true
+    first: {
+      type: String,
+      // TODO: Change required dependency after testing
+      required: false,
+      // required: [true, 'Name is missing.'],
+      unique: false,
+      trim: true,
+    },
+    last: {
+      type: String,
+      // TODO: Change required dependency after testing
+      required: false,
+      // required: [true, 'Name is missing.'],
+      unique: false,
+      trim: true,
+    }
+
   },
   businessUnit: {
     type: String,
@@ -61,9 +72,8 @@ const UserSchema = new mongoose.Schema({
   // TODO: Insert other fields here
   /* */
   // TODO: Link user's _id to photo on S3/Google Storage
-//     KL note: there was a code conflict here, included the version from node-boiler-plate branch
+  
   userPhotoKey: {
-
     type: String,
     required: false,
     unique: false
