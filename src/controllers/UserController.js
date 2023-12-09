@@ -4,26 +4,34 @@ const { User } = require('../models/UserModel');
 const { logToFile } = require('../functions/logToFile');
 
 // Error handling switch
-const errorSwtich = (err) => {
+const errorSwtich = (err, response) => {
+  let statusCode = 500;
+  let message = 'Sorry. That\'s a problem on our side. Look like Mavis spilled her tea on the server.';
+
   switch (err) {
     case 400:
-      response.status(400).json({ message: `Your intent is good but the request was bad. ${err}` });
-      logToFile(`UserController.js: ${err}`);
+      statusCode = 400;
+      message = `Your intent is good but the request was bad. ${err}`;
       break;
     case 403:
-      response.status(403).json({ message: `You are not authorised to do that. We'pologise. ${err}` });
-      logToFile(`UserController.js: ${err}`);
+      statusCode = 403;
+      message = `You are not authorised to do that. We'pologise. ${err}`;
       break;
     case 404:
-      response.status(404).json({ message: `This is not the page you are looking for. ${err}` });
-      logToFile(`UserController.js: ${err}`);
+      statusCode = 404;
+      message = `This is not the page you are looking for. ${err}`;
       break;
     default:
-      response.status(500).json({ message: `Sorry. That's a problem on our side. Mavis is looking into it now... well, after her tea. ${err}` });
-      logToFile(`UserController.js: ${err}`);
-      break;
-  }
-}
+      statusCode = 500;
+      message = `Sorry. That's a problem on our side. Mavis is looking into it now... well, after her tea. ${err}`
+      break;      
+    };
+      
+  response.status(statusCode).json({ message: message });
+  logToFile(`UserController.js: ${err}`);
+  
+  };
+
 
 /* === USER GET ROUTES === */
 
@@ -38,7 +46,7 @@ router.get('/all', async (request, response) => {
     });
     
   } catch (err) {
-    errorSwtich(err);
+    errorSwtich(err, response);
   }
 });
 
@@ -54,7 +62,7 @@ router.get('/all/fullusers', async (request, response) => {
     });
     
   } catch (err) {
-    errorSwtich(err);
+    errorSwtich(err, response);
   }
 });
 
@@ -70,7 +78,7 @@ router.get('/one/id/:id', async (request, response) => {
     });
     
   } catch (err) {
-    errorSwtich(err);
+    errorSwtich(err, response);
   }
 });
 
@@ -89,7 +97,7 @@ router.get('/one/name/:firstName/:lastName', async (request, response) => {
     });
     
   } catch (err) {
-    errorSwtich(err);
+    errorSwtich(err, response);
   }
 });
 
@@ -110,7 +118,7 @@ router.get('/search/:string', async (request, response) => {
     });
     
   } catch (err) {
-    errorSwtich(err);
+    errorSwtich(err, response);
   }
 });
 
@@ -125,13 +133,126 @@ router.get('/all/manager/:id', async (request, response) => {
     });
     
   } catch (err) {
-    errorSwtich(err);
+    errorSwtich(err, response);
   }
 });
 
 
 /* === USER POST ROUTES === */
 
+
+// POST new user
+// eg: POST http://localhost:3000/users/new
+/* ADD AUTHORISATION */
+router.post('/new', async (request, response) => {
+  try {
+    const newUser = new User(request.body);
+    const result = await newUser.save();
+    
+    response.json({
+      User: result
+    });
+    
+  } catch (err) {
+    errorSwtich(err, response);
+  }
+});
+
+
+/* === USER PATCH ROUTES === */
+
+// PATCH user by id, for use by self
+// eg: PATCH localhost:3000/users/update/self/5e9b2b7b9b9b9b9b9b9b9b9b
+/* ADD AUTHORISATION */
+router.patch('/update/self/:id', async (request, response) => {
+  try {
+    // creates object of keys from request body
+    const updates = Object.keys(request.body);
+    // so as to limit update to only allowed updates: userTagLine
+    const allowedUpdates = ['userTagLine'];
+    // applies updated values to user object
+    const isValid = updates.every((update) => allowedUpdates.includes(update));
+
+    // if trying to update a non-updatable field, return error
+    if (!isValid) {
+      return response.status(400).send({ error: 'Your intent is good but we can\'t update that.' });
+    }
+
+    // otherwise... update
+    const updateSelf = await User.findById(request.params.id);
+
+    // if person does not exist, return error
+    if (!updateSelf) {
+      return response.status(404).send({ error: 'Hmm. We can\'t find that person.' });
+    }
+
+    // otherwise... update
+    updates.forEach((update) => updateSelf[update] = request.body[update]);
+    await updateSelf.save();
+
+    response.send(updateSelf);
+
+  } catch (err) {
+    errorSwtich(err, response);
+  }
+});
+
+
+// PATCH admin by id 
+// eg: PATCH localhost:3000/users/update/admin/5e9b2b7b9b9b9b9b9b9b9b9b
+/* ADD AUTHORISATION */
+router.patch('/update/admin/:id', async (request, response) => {
+  try {
+    // creates object of keys from request body
+    const updates = Object.keys(request.body);
+    // so as to limit update to only allowed updates: userTagLine
+    const allowedUpdates = ['email', 'name', 'businessUnit', 'lineManagerId', 'userPhotoKey', 'userTagLine', 'isFullUser', 'isLineManager', 'isSeniorManager', 'isAdmin'];
+
+    // applies updated values to user object
+    const isValid = updates.every((update) => allowedUpdates.includes(update));
+
+    // if trying to update a non-updatable field, return error
+    if (!isValid) {
+      return response.status(400).send({ error: 'Your intent is good but there is something in there that we can\'t update.' });
+    }
+
+    // otherwise... update
+    const updateSelf = await User.findById(request.params.id);
+
+    // if person does not exist, return error
+    if (!updateSelf) {
+      return response.status(404).send({ error: 'Hmm. We can\'t find that person.' });
+    }
+
+    // otherwise... update
+    updates.forEach((update) => updateSelf[update] = request.body[update]);
+    await updateSelf.save();
+
+    response.send(updateSelf);
+
+  } catch (err) {
+    errorSwtich(err, response);
+  }
+});
+
+
+/* === USER DELETE ROUTES === */
+
+// DELETE user by id, for admin use
+// eg: DELETE localhost:3000/admin/delete/5e9b2b7b9b9b9b9b9b9b9b9b
+/* ADD AUTHORISATION */
+router.delete('/delete/admin/:id', async (request, response) => {
+  try {
+    const result = await User.findByIdAndDelete(request.params.id);
+    
+    response.json({
+      User: result
+    });
+    
+  } catch (err) {
+    errorSwtich(err, response);
+  }
+});
 
 
 
