@@ -28,6 +28,7 @@ const errorSwtich = (err) => {
 /* === USER GET ROUTES === */
 
 // GET all users in db
+// eg GET localhost:3000/users/all/
 router.get('/all', async (request, response) => {
   try {
     const result = await User.find({});
@@ -43,6 +44,7 @@ router.get('/all', async (request, response) => {
 
 
 // GET all FULL users in db
+// eg GET localhost:3000/users/all/fullusers
 router.get('/all/fullusers', async (request, response) => {
   try {
     const result = await User.find({isFullUser: true});
@@ -58,12 +60,53 @@ router.get('/all/fullusers', async (request, response) => {
 
 
 // GET user by id
-router.get('/one/:id', async (request, response) => {
+// eg: GET localhost:3000/users/one/id/5e9b2b7b9b9b9b9b9b9b9b9b
+router.get('/one/id/:id', async (request, response) => {
   try {
     const result = await User.findById(request.params.id);
     
     response.json({
       User: result
+    });
+    
+  } catch (err) {
+    errorSwtich(err);
+  }
+});
+
+// GET user by name
+router.get('/one/name/:firstName/:lastName', async (request, response) => {
+  try {
+    // Removed case sensitivity from query params
+    // eg: GET localhost:3000/users/one/name/katie/lock
+    const firstNameRegex = new RegExp(request.params.firstName, 'i'); // 'i' makes it case insensitive
+    const lastNameRegex = new RegExp(request.params.lastName, 'i'); // 'i' makes it case insensitive
+    
+    const result = await User.findOne({ 'name.first': { $regex: firstNameRegex }, 'name.last': { $regex: lastNameRegex } });
+    
+    response.json({
+      Users: result
+    });
+    
+  } catch (err) {
+    errorSwtich(err);
+  }
+});
+
+// GET user regex, by name - not case sensitive
+// eg: GET localhost:3000/users/search/katie
+router.get('/search/:string', async (request, response) => {
+  try {
+    const regex = new RegExp(request.params.string, 'i');
+    const result = await User.find({ 
+      $or: [
+        { 'name.first': { $regex: regex } },
+        { 'name.last': { $regex: regex } }
+      ]
+    });
+    
+    response.json({
+      Users: result
     });
     
   } catch (err) {
