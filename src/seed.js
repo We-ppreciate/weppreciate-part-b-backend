@@ -7,12 +7,14 @@ const { Nomination } = require('./models/NominationModel');
 const { Comments } = require('./models/CommentModel');
 const { logToFile } = require('./functions/logToFile');
 
+
 /*
   USER SEED DATA
 
   This file is used to seed the database with some initial data.
   TODO: MAKE DRY
 */
+
 
 // {
 //   _id: objectId,
@@ -36,6 +38,7 @@ databaseConnect().then(async () => {
   logToFile("=== seed.js executed ===");
   logToFile("seed,js: Creating user seed data!");
 
+
   /* USER SEED DATA */
   
   const natePicone = new User({
@@ -44,12 +47,14 @@ databaseConnect().then(async () => {
       first: "Nate",
       last: "Picone"
     },
+
     email: `nate.picone@yourcompany.com`,
     businessUnit: "Business Services",
     passwordHash: "replacethiswithhash",
     lineManagerId: null,
     userTagLine: "Tell me your access issue and I will make it go away.",
     userPhotoKey: 'replacewithURL',
+
     isFullUser: true,
     isLineManager: false,
     isSeniorManager: false,
@@ -68,6 +73,7 @@ databaseConnect().then(async () => {
       first: "Ed",
       last: "Dogherty"
     },
+
     email: `ed.dougherty@yourcompany.com`,
     businessUnit: "Business Services",
     passwordHash: "replacethiswithhash",
@@ -176,6 +182,7 @@ databaseConnect().then(async () => {
 
   /* NOMINATION SEED DATA */
 
+  
   // { 
   //   nomineeUser: User Object,
   //   nominatorFullUser: User Object,

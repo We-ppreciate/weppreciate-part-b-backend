@@ -8,8 +8,10 @@ require('dotenv').config();
 
 /* MOVE TO DATABASE.JS? */
 
+
 async function dropCollection() {
   logToFile("dropdb.js: === drop collections executed ===");
+
   try {
     await databaseConnect({ useNewUrlParser: true, useUnifiedTopology: true });
     // drop user collection
@@ -27,4 +29,5 @@ async function dropCollection() {
 
 
 dropCollection();
+
 

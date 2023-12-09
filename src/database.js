@@ -17,6 +17,7 @@ async function databaseConnect(){
 async function databaseClose(){
 	try {
 		await mongoose.connection.close();
+
 		logToFile("database.js: Database closed");
 		logToFile("database.js: === END ===");
 	} catch (error) {
@@ -30,6 +31,7 @@ async function databaseCollectionDrop(param){
 		logToFile("Collection dropped");
 	} catch (error) {
 		logToFile(`database.js: === ERROR ===\ndatabaseCollectionDrop failed to drop Collection:\n${JSON.stringify(error)}\n===`);
+
 	}
 };
 

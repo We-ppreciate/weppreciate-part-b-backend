@@ -38,6 +38,7 @@ const UserSchema = new mongoose.Schema({
       unique: false,
       trim: true,
     }
+
   },
   businessUnit: {
     type: String,
@@ -71,6 +72,7 @@ const UserSchema = new mongoose.Schema({
   // TODO: Insert other fields here
   /* */
   // TODO: Link user's _id to photo on S3/Google Storage
+  
   userPhotoKey: {
     type: String,
     required: false,
