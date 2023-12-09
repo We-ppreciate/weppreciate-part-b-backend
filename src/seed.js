@@ -35,8 +35,8 @@ const { logToFile } = require('./functions/logToFile');
 // }
 
 databaseConnect().then(async () => {
-  logToFile("=== seed.js executed ===");
-  logToFile("seed,js: Creating user seed data!");
+  logToFile('=== seed.js executed ===');
+  logToFile('seed,js: Creating user seed data!');
 
 
   /* USER SEED DATA */
@@ -44,15 +44,15 @@ databaseConnect().then(async () => {
   const natePicone = new User({
     _id: new mongoose.Types.ObjectId(),
     name: {
-      first: "Nate",
-      last: "Picone"
+      first: 'Nate',
+      last: 'Picone'
     },
 
     email: `nate.picone@yourcompany.com`,
-    businessUnit: "Business Services",
-    passwordHash: "replacethiswithhash",
+    businessUnit: 'Business Services',
+    passwordHash: 'replacethiswithhash',
     lineManagerId: null,
-    userTagLine: "Tell me your access issue and I will make it go away.",
+    userTagLine: 'Tell me your access issue and I will make it go away.',
     userPhotoKey: 'replacewithURL',
 
     isFullUser: true,
@@ -70,15 +70,15 @@ databaseConnect().then(async () => {
   const edDougherty = new User({
     id: new mongoose.Types.ObjectId(),
     name: {
-      first: "Ed",
-      last: "Dogherty"
+      first: 'Ed',
+      last: 'Dogherty'
     },
 
     email: `ed.dougherty@yourcompany.com`,
-    businessUnit: "Business Services",
-    passwordHash: "replacethiswithhash",
+    businessUnit: 'Business Services',
+    passwordHash: 'replacethiswithhash',
     lineManagerId: null,
-    userTagLine: "Building a better tomorrow, today.",
+    userTagLine: 'Building a better tomorrow, today.',
     userPhotoKey: 'replacewithURL',
     isFullUser: true,
     isLineManager: true,
@@ -95,14 +95,14 @@ databaseConnect().then(async () => {
   const hannahSallows = new User({
     id: new mongoose.Types.ObjectId(),
     name: {
-      first: "Hannah",
-      last: "Sallows"
+      first: 'Hannah',
+      last: 'Sallows'
     },
     email: `Hannah.Sallows@yourcompany.com`,
-    businessUnit: "Business Services",
-    passwordHash: "replacethiswithhash",
+    businessUnit: 'Business Services',
+    passwordHash: 'replacethiswithhash',
     lineManagerId: null,
-    userTagLine: "Working collaboratively for moments that matter.",
+    userTagLine: 'Working collaboratively for moments that matter.',
     userPhotoKey: 'replacewithURL',
     isFullUser: true,
     isLineManager: true,
@@ -119,14 +119,14 @@ databaseConnect().then(async () => {
   const katieLock = new User({
     id: new mongoose.Types.ObjectId(),
     name: {
-      first: "Katie",
-      last: "Lock"
+      first: 'Katie',
+      last: 'Lock'
     },
     email: `Katie.Lock@yourcompany.com`,
-    businessUnit: "HR Business Partnership",
-    passwordHash: "replacethiswithhash",
+    businessUnit: 'HR Business Partnership',
+    passwordHash: 'replacethiswithhash',
     lineManagerId: null,
-    userTagLine: "Helping people achieve their goals.",
+    userTagLine: 'Helping people achieve their goals.',
     userPhotoKey: 'replacewithURL',
     isFullUser: true,
     isLineManager: false,
@@ -143,14 +143,14 @@ databaseConnect().then(async () => {
   const jordanBenjamin = new User({
     id: new mongoose.Types.ObjectId(),
     name: {
-      first: "Jordan",
-      last: "Benjamin"
+      first: 'Jordan',
+      last: 'Benjamin'
     },
     email: `Jordan.Benjamin@yourcompany.com`,
-    businessUnit: "Art",
-    passwordHash: "replacethiswithhash",
+    businessUnit: 'Art',
+    passwordHash: 'replacethiswithhash',
     lineManagerId: null,
-    userTagLine: "Creating Beautiful things",
+    userTagLine: 'Creating Beautiful things',
     userPhotoKey: 'replacewithURL',
     isFullUser: false,
     isLineManager: false,
@@ -208,9 +208,9 @@ databaseConnect().then(async () => {
     nomineeUser: natePicone,
     nominatorFullUser: edDougherty,
     nominatorBasicUser: null,
-    nominationValue: "Commitment",
-    nominationBody: "Nate is a great guy!",
-    nominationDate: "2023-12-09",
+    nominationValue: 'Commitment',
+    nominationBody: 'Nate is a great guy!',
+    nominationDate: '2023-12-09',
     isNominatorFullUser: true,
     isAward: false,
     isNominationInstant: true,
@@ -228,14 +228,14 @@ databaseConnect().then(async () => {
     nominatorFullUser: null,
     nominatorBasicUser: {
       basicName: {
-        first: "Naomi",
-        last: "SkyCaptain",
+        first: 'Naomi',
+        last: 'SkyCaptain',
       },
       basicEmail: 'naomi.skycaptain@yourcompany.com',
     },
-    nominationValue: "Challenging",
-    nominationBody: "Ed is a challenger!",
-    nominationDate: "2023-12-10",
+    nominationValue: 'Challenging',
+    nominationBody: 'Ed is a challenger!',
+    nominationDate: '2023-12-10',
     isNominationInstant: false,
     isNominatorFullUser: false,
     isAward: false,
