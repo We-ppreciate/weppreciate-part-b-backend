@@ -76,18 +76,30 @@ router.get('/all/nominator/:firstName/:lastName', async (request, response) => {
   try {
     // Find the user with matching first and last name
     const user = await User.findOne({ 'name.first': firstName, 'name.last': lastName });
-
-    if (!user) {
-      return response.status(404).json({ error: `${request.params.firstName} ${request.params.lastName} cannot be found. Have they nominated someone?` });
-    }
-
+  
     // Find nominations where the user is the nominator
-    const result = await Nomination.find({ nominatorFullUser: user.id });
-
+    let result = [];
+  
+    if (!user) {
+      result = await Nomination.find({
+        'nominatorBasicUser.basicName.first': firstName,
+        'nominatorBasicUser.basicName.last': lastName
+      });
+    } else {
+      result = await Nomination.find({
+        $or: [
+          { nominatorFullUser: user.id },
+          {
+            'nominatorBasicUser.basicName.first': firstName,
+            'nominatorBasicUser.basicName.last': lastName
+          }
+        ]
+      });
+    }
+  
     response.json({
       Nominations: result
     });
-
   } catch (err) {
     errorSwtich(err, response);
   }
