@@ -51,9 +51,23 @@ const NominationSchema = new mongoose.Schema({
       },
       // Nomination date - default to submitted date
       nominationDate: {
-        type: Date,
-        default: Date.now,
+        type: String,
+        default: () => {
+          const date = new Date().toLocaleString('en-AU', {
+            timeZone: 'Australia/Sydney',
+            dateStyle: 'short'
+          });
+          return date;
+        },
         required: false,
+        validate: {
+          validator: function (value) {
+            // Regex to validate date format (dd-mm-yyyy)
+            const regex = /^(0[1-9]|1\d|2\d|3[01])-(0[1-9]|1[0-2])-(19|20)\d{2}$/;
+            return regex.test(value);
+          },
+          message: 'Invalid date format. Date should be in dd-mm-yyyy format.'
+        }
       },
       isNominatorFullUser: {
         type: Boolean,
@@ -87,8 +101,23 @@ const NominationSchema = new mongoose.Schema({
     },
     // Date award is released
     releaseDate: {
-      type: Date,
+      type: String,
+      default: () => {
+        const date = new Date().toLocaleString('en-AU', {
+          timeZone: 'Australia/Sydney',
+          dateStyle: 'short'
+        });
+        return date;
+      },
       required: false,
+      validate: {
+        validator: function (value) {
+          // Regex to validate date format (dd-mm-yyyy)
+          const regex = /^(0[1-9]|1\d|2\d|3[01])-(0[1-9]|1[0-2])-(19|20)\d{2}$/;
+          return regex.test(value);
+        },
+        message: 'Invalid date format. Date should be in dd-mm-yyyy format.'
+      }
     },
 });
 
