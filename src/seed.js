@@ -56,7 +56,6 @@ databaseConnect().then(async () => {
     lineManagerId: null,
     userTagLine: 'Tell me your access issue and I will make it go away.',
     userPhotoKey: 'replacewithURL',
-
     isFullUser: true,
     isLineManager: false,
     isSeniorManager: false,
@@ -197,7 +196,6 @@ databaseConnect().then(async () => {
   // { 
   //   recipientUser: User Object,
   //   nominatorFullUser: User Object,
-  //   isNominatorFullUser: Boolean,
   //   nominatorBasicUser: {
   //     basicName: {
   //       first: String,
@@ -205,10 +203,11 @@ databaseConnect().then(async () => {
   //     },
   //     basicEmail: String,
   //   },
-  //   isNominationInstant: Boolean,
   //   nominationValue: awardEnum
   //   nominationBody: String,
   //   nominationDate: Date,
+  //   isNominatorFullUser: Boolean,
+  //   isNominationInstant: Boolean,
   //   isAward: Boolean,
   //   isReleased: Boolean,
   //   releaseDate: Date,
@@ -230,8 +229,29 @@ databaseConnect().then(async () => {
   });
 
   await instantNate.save().then(() => {
-    logToFile(`seed.js: Award for ${instantNate.nomineeUser.name} saved, with id ${instantNate._id}\n${instantNate}`);
-    console.log(`seed.js: Award for ${instantNate.nomineeUser.name} saved, with id ${instantNate._id}\n${instantNate}`);
+    logToFile(`seed.js: Award for ${instantNate.recipientUser.name} saved, with id ${instantNate._id}\n${instantNate}`);
+    console.log(`seed.js: Award for ${instantNate.recipientUser.name} saved, with id ${instantNate._id}\n${instantNate}`);
+  });
+
+  const instantEd = new Nomination({
+    _id: new mongoose.Types.ObjectId(),
+    recipientUser: edDougherty,
+    nominatorFullUser: katieLock,
+    nominatorBasicUser: null,
+    nominationValue: 'Commitment',
+    nominationBody: 'Ed is also a great guy!',
+    nominationDate: '2023-12-02',
+    isNominatorFullUser: true,
+    isAward: false,
+    isNominationInstant: true,
+    isReleased: false,
+    releaseDate: null
+  });
+
+  await instantEd.save().then(() => {
+    logToFile(`seed.js: Award for ${instantEd.recipientUser.name} saved, with id ${instantEd._id}\n${instantEd}`);
+    console.log(`seed.js: Award for ${instantEd.recipientUser.name} saved, with id ${instantEd._id}\n${instantEd}`);
+
   });
 
   const nominateEd = new Nomination({
@@ -256,8 +276,28 @@ databaseConnect().then(async () => {
   });
 
   await nominateEd.save().then(() => {
-    logToFile(`seed.js: Award for ${nominateEd.nomineeUser.name} saved, with id ${nominateEd._id}\n${nominateEd}`);
-    console.log(`seed.js: Award for ${nominateEd.nomineeUser.name} saved, with id ${nominateEd._id}\n${nominateEd}`);
+    logToFile(`seed.js: Award for ${nominateEd.recipientUser.name} saved, with id ${nominateEd._id}\n${nominateEd}`);
+    console.log(`seed.js: Award for ${nominateEd.recipientUser.name} saved, with id ${nominateEd._id}\n${nominateEd}`);
+  });  
+
+  const nominateKatie = new Nomination({
+    _id: new mongoose.Types.ObjectId(),
+    recipientUser: katieLock,
+    nominatorFullUser: katieLock,
+    nominatorBasicUser: null,
+    nominationValue: 'Commitment',
+    nominationBody: 'Katie deserves this because of the thing what she did at the time.',
+    nominationDate: '2023-11-02',
+    isNominatorFullUser: true,
+    isAward: true,
+    isNominationInstant: true,
+    isReleased: true,
+    releaseDate: null
+  });
+
+  await nominateKatie.save().then(() => {
+    logToFile(`seed.js: Award for ${nominateKatie.recipientUser.name} saved, with id ${nominateKatie._id}\n${nominateKatie}`);
+    console.log(`seed.js: Award for ${nominateKatie.recipientUser.name} saved, with id ${nominateKatie._id}\n${nominateKatie}`);
   });  
 
   /* TO DO: COMMENT SEED DATA */

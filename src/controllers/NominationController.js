@@ -55,7 +55,7 @@ const errorSwtich = (err, response) => {
   // eg GET localhost:3000/nominations/all/recipient/5f2f8e3d2b8e9a0017b0e9f0
   router.get('/all/recipient/:id', async (request, response) => {
     try {
-      const result = await Nomination.find({nomineeRecipient: request.params.id});
+      const result = await Nomination.find({recipientUser: request.params.id});
 
       response.json({
         Nominations: result
@@ -85,7 +85,7 @@ const errorSwtich = (err, response) => {
   // eg GET localhost:3000/nominations/one/recipient/5f2f8e3d2b8e9a0017b0e9f0
   router.get('/one/recipient/:id', async (request, response) => {
     try {
-      const result = await Nomination.find({recipientUser: request.params.id});
+      const result = await Nomination.findOne({recipientUser: request.params.id});
 
       response.json({
         Nominations: result
@@ -97,9 +97,9 @@ const errorSwtich = (err, response) => {
   });
 
 
-  // GET one nomination by nominator id
+  // GET all nominations by nominator id
   // eg GET localhost:3000/nominations/one/nominator/5f2f8e3d2b8e9a0017b0e9f0
-  router.get('/one/nominator/:id', async (request, response) => {
+  router.get('/all/nominator/:id', async (request, response) => {
     try {
       const result = await Nomination.find({nominatorFullUser: request.params.id});
 
