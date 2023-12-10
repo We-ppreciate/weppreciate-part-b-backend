@@ -40,7 +40,8 @@ app.get('*', (request, response) => {
 	response.json({
 		message: 'This is not the page you are looking for.'
 	});
-	logToFile(`server.js: 404.`);
+	logToFile(`server.js: 404. ${request.url}`);
+	console.log(`server.js: 404. ${request.url}`);
 });
 
 module.exports = {

@@ -70,6 +70,28 @@ const errorSwtich = (err, response) => {
   // GET all nominations by nominator fullUser name or basicUser name
   // eg GET localhost:3000/nominations/all/nominator/name/ed/dogherty
 
+router.get('/all/nominator/:firstName/:lastName', async (request, response) => {
+  const { firstName, lastName } = request.params;
+
+  try {
+    // Find the user with matching first and last name
+    const user = await User.findOne({ 'name.first': firstName, 'name.last': lastName });
+
+    if (!user) {
+      return response.status(404).json({ error: `${request.params.firstName} ${request.params.lastName} cannot be found. Have they nominated someone?` });
+    }
+
+    // Find nominations where the user is the nominator
+    const result = await Nomination.find({ nominatorFullUser: user.id });
+
+    response.json({
+      Nominations: result
+    });
+
+  } catch (err) {
+    errorSwtich(err, response);
+  }
+});
 
 
   // GET all nominations sent in a month
