@@ -4,7 +4,10 @@ const { Nomination } = require('../models/NominationModel');
 const { User } = require('../models/UserModel');
 const { logToFile } = require('../functions/logToFile');
 
-// Error handling switch
+
+/* === ERROR HANDLING SWITCH === */
+
+
 const errorSwtich = (err, response) => {
   let statusCode = 500;
   let message = `Sorry. That\'s a problem on our side. Look like Mavis spilled her tea on the server. ${err}`;
@@ -110,13 +113,13 @@ router.get('/all/nominator/:firstName/:lastName', async (request, response) => {
 });
 
 
-  // GET all released nominations
+  // TODO GET all released nominations
 
 
-  // GET all unreleased nominations
+  // TODO GET all unreleased nominations
 
 
-  // GET all instant nominations
+  // TODO GET all instant nominations
 
 
   // GET one nomination by nominator id
@@ -185,7 +188,8 @@ router.get('/all/nominator/:firstName/:lastName', async (request, response) => {
 module.exports = router;
 
 
-  /* === NOMINATION GET POST === */
+/* === NOMINATION POST ROUTES === */
+
 
 // POST new nomination
 // eg: POST localhost:3000/nominations/new
@@ -193,7 +197,7 @@ module.exports = router;
 router.post('/new', async (request, response) => {
   try {
     const { recipientUser, nominatorFullUser } = request.body;
-    
+
     // Check if recipientUser is equal to nominatorFullUser
     if (recipientUser === nominatorFullUser) {
       response.status(400).json({
@@ -213,3 +217,9 @@ router.post('/new', async (request, response) => {
     errorSwtich(err, response);
   }
 });
+
+
+/* === NOMINATION PATCH ROUTES === */
+
+
+
