@@ -5,7 +5,7 @@ const awardEnum = ['Say/Do', 'Commitment', 'Collborate', 'Challenging', 'Learnin
 
 const NominationSchema = new mongoose.Schema({
     // ID of the nominee - to come from User Collection
-    nomineeUser: {
+    recipientUser: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       // TODO: Change required dependency after testing

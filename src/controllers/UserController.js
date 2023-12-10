@@ -6,7 +6,7 @@ const { logToFile } = require('../functions/logToFile');
 // Error handling switch
 const errorSwtich = (err, response) => {
   let statusCode = 500;
-  let message = 'Sorry. That\'s a problem on our side. Look like Mavis spilled her tea on the server.';
+  let message = `Sorry. That\'s a problem on our side. Look like Mavis spilled her tea on the server. ${err}`;
 
   switch (err) {
     case 400:
@@ -29,7 +29,7 @@ const errorSwtich = (err, response) => {
       
   response.status(statusCode).json({ message: message });
   logToFile(`UserController.js: ${err}`);
-  
+  console.log(`UserController.js: ${err}`);
   };
 
 
@@ -83,10 +83,10 @@ router.get('/one/id/:id', async (request, response) => {
 });
 
 // GET user by name
+// eg: GET localhost:3000/users/one/name/katie/lock
 router.get('/one/name/:firstName/:lastName', async (request, response) => {
   try {
     // Removed case sensitivity from query params
-    // eg: GET localhost:3000/users/one/name/katie/lock
     const firstNameRegex = new RegExp(request.params.firstName, 'i'); // 'i' makes it case insensitive
     const lastNameRegex = new RegExp(request.params.lastName, 'i'); // 'i' makes it case insensitive
     
