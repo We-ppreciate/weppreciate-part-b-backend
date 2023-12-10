@@ -251,6 +251,7 @@ databaseConnect().then(async () => {
   await instantEd.save().then(() => {
     logToFile(`seed.js: Award for ${instantEd.recipientUser.name} saved, with id ${instantEd._id}\n${instantEd}`);
     console.log(`seed.js: Award for ${instantEd.recipientUser.name} saved, with id ${instantEd._id}\n${instantEd}`);
+
   });
 
   const nominateEd = new Nomination({
