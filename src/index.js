@@ -18,6 +18,7 @@ app.listen(PORT, async () => {
 	} catch (err) {
 		logToFile(`index.js: ${err}`);
 		console.log(`index.js: ${err}`);
+
 		console.log(`We\'re sorry. There\'s a problem starting up. Mavis is looking into it now... well, she will, after her tea. ${err}`);
 	}
 });
