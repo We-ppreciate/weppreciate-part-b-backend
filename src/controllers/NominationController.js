@@ -75,23 +75,26 @@ router.get('/all/nominator/:firstName/:lastName', async (request, response) => {
 
   try {
     // Find the user with matching first and last name
-    const user = await User.findOne({ 'name.first': firstName, 'name.last': lastName });
+    const user = await User.findOne({ 
+      'name.first': { $regex: new RegExp(`^${firstName}$`, 'i') }, 
+      'name.last': {$regex: new RegExp(`^${lastName}$`, 'i') } 
+    });
   
     // Find nominations where the user is the nominator
     let result = [];
   
     if (!user) {
       result = await Nomination.find({
-        'nominatorBasicUser.basicName.first': firstName,
-        'nominatorBasicUser.basicName.last': lastName
+        'nominatorBasicUser.basicName.first': { $regex: new RegExp(`^${firstName}$`, 'i') }, 
+        'nominatorBasicUser.basicName.last': {$regex: new RegExp(`^${lastName}$`, 'i') } 
       });
     } else {
       result = await Nomination.find({
         $or: [
           { nominatorFullUser: user.id },
           {
-            'nominatorBasicUser.basicName.first': firstName,
-            'nominatorBasicUser.basicName.last': lastName
+            'nominatorBasicUser.basicName.first': { $regex: new RegExp(`^${firstName}$`, 'i') },
+            'nominatorBasicUser.basicName.last': {$regex: new RegExp(`^${lastName}$`, 'i') } 
           }
         ]
       });
