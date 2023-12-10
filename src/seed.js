@@ -184,7 +184,7 @@ databaseConnect().then(async () => {
 
   
   // { 
-  //   nomineeUser: User Object,
+  //   recipientUser: User Object,
   //   nominatorFullUser: User Object,
   //   isNominatorFullUser: Boolean,
   //   nominatorBasicUser: {
@@ -205,7 +205,7 @@ databaseConnect().then(async () => {
 
   const instantNate = new Nomination({
     _id: new mongoose.Types.ObjectId(),
-    nomineeUser: natePicone,
+    recipientUser: natePicone,
     nominatorFullUser: edDougherty,
     nominatorBasicUser: null,
     nominationValue: 'Commitment',
@@ -224,7 +224,7 @@ databaseConnect().then(async () => {
 
   const nominateEd = new Nomination({
     _id: new mongoose.Types.ObjectId(),
-    nomineeUser: edDougherty,
+    recipientUser: edDougherty,
     nominatorFullUser: null,
     nominatorBasicUser: {
       basicName: {
