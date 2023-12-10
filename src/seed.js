@@ -37,6 +37,8 @@ const { logToFile } = require('./functions/logToFile');
 databaseConnect().then(async () => {
   logToFile('=== seed.js executed ===');
   logToFile('seed,js: Creating user seed data!');
+  console.log('=== seed.js executed ===');
+  console.log('seed,js: Creating user seed data!')
 
 
   /* USER SEED DATA */
@@ -65,6 +67,7 @@ databaseConnect().then(async () => {
 
   await natePicone.save().then(() => {
     logToFile(`seed.js: ${natePicone.name} saved, with id ${natePicone._id}\n${natePicone}`);
+    console.log(`seed.js: ${natePicone.name} saved, with id ${natePicone._id}\n${natePicone}`);
   });
 
   const edDougherty = new User({
@@ -90,6 +93,7 @@ databaseConnect().then(async () => {
 
   await edDougherty.save().then(() => {
     logToFile(`seed.js: ${edDougherty.name} saved, with id ${edDougherty._id}\n${edDougherty}`);
+    console.log(`seed.js: ${edDougherty.name} saved, with id ${edDougherty._id}\n${edDougherty}`);
   });
 
   const hannahSallows = new User({
@@ -114,6 +118,7 @@ databaseConnect().then(async () => {
 
   await hannahSallows.save().then(() => {
     logToFile(`seed.js: ${hannahSallows.name} saved, with id ${hannahSallows._id}\n${hannahSallows}`);
+    console.log(`seed.js: ${hannahSallows.name} saved, with id ${hannahSallows._id}\n${hannahSallows}`);
   });
 
   const katieLock = new User({
@@ -138,6 +143,7 @@ databaseConnect().then(async () => {
 
   await katieLock.save().then(() => {
     logToFile(`seed.js: ${katieLock.name} saved, with id ${katieLock._id}\n${katieLock}`);
+    console.log(`seed.js: ${katieLock.name} saved, with id ${katieLock._id}\n${katieLock}`);
   });
 
   const jordanBenjamin = new User({
@@ -162,21 +168,26 @@ databaseConnect().then(async () => {
 
   await jordanBenjamin.save().then(() => {
     logToFile(`seed.js: ${jordanBenjamin.name} saved, with id ${jordanBenjamin._id}\n${jordanBenjamin}`);
+    console.log(`seed.js: ${jordanBenjamin.name} saved, with id ${jordanBenjamin._id}\n${jordanBenjamin}`);
   });
 
   // Update line manager details
   try {
     await User.findOneAndUpdate({ _id: natePicone._id }, { lineManagerId: edDougherty._id }, { new: true });
     logToFile(`seed.js: ${natePicone.name} updated, with line manager`);
+    console.log(`seed.js: ${natePicone.name} updated, with line manager`);
   } catch (error) {
     logToFile(`seed.js: ${error}`);
+    console.log(`seed.js: ${error}`);
   }    
 
   try {
     await User.findOneAndUpdate({ _id: edDougherty._id }, { lineManagerId: hannahSallows._id }, { new: true });
     logToFile(`seed.js: ${edDougherty.name} updated, with line manager`);
+    console.log(`seed.js: ${edDougherty.name} updated, with line manager`);
   } catch (error) {
     logToFile(`seed.js: ${error}`);
+    console.log(`seed.js: ${error}`);
   }  
   
 
@@ -220,6 +231,7 @@ databaseConnect().then(async () => {
 
   await instantNate.save().then(() => {
     logToFile(`seed.js: Award for ${instantNate.nomineeUser.name} saved, with id ${instantNate._id}\n${instantNate}`);
+    console.log(`seed.js: Award for ${instantNate.nomineeUser.name} saved, with id ${instantNate._id}\n${instantNate}`);
   });
 
   const nominateEd = new Nomination({
@@ -245,6 +257,7 @@ databaseConnect().then(async () => {
 
   await nominateEd.save().then(() => {
     logToFile(`seed.js: Award for ${nominateEd.nomineeUser.name} saved, with id ${nominateEd._id}\n${nominateEd}`);
+    console.log(`seed.js: Award for ${nominateEd.nomineeUser.name} saved, with id ${nominateEd._id}\n${nominateEd}`);
   });  
 
   /* TO DO: COMMENT SEED DATA */
