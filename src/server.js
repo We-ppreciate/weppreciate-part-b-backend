@@ -1,9 +1,17 @@
 
 const express = require('express');
+const cors = require('cors');
 
+// Enables cross-origin resource sharing
+const corsOptions = {
+	origin: '*',
+	optionsSuccessStatus: 200
+};
 
 // make a server instance 
 const app = express();
+
+app.use(cors(corsOptions));
 
 // Enables request.body to be raw JSON data 
 app.use(express.json());
