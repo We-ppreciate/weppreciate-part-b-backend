@@ -73,7 +73,7 @@ databaseConnect().then(async () => {
     id: new mongoose.Types.ObjectId(),
     name: {
       first: 'Ed',
-      last: 'Dogherty'
+      last: 'Dougherty'
     },
 
     email: `ed.dougherty@yourcompany.com`,
