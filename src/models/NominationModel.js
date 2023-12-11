@@ -64,7 +64,8 @@ const NominationSchema = new mongoose.Schema({
           validator: function (value) {
             // Regex to validate date format (dd-mm-yyyy)
             const regex = /^(0[1-9]|1\d|2\d|3[01])-(0[1-9]|1[0-2])-(19|20)\d{2}$/;
-            return regex.test(value);
+            return regex.test(value) || value === '' || value === null || value === undefined;
+
           },
           message: 'Invalid date format. Date should be in dd-mm-yyyy format.'
         }
