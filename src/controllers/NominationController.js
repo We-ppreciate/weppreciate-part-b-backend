@@ -29,12 +29,12 @@ const errorSwtich = (err, response) => {
       statusCode = 500;
       message = `Sorry. That's a problem on our side. Mavis is looking into it now... well, she will, after her tea. ${err}`
       break;      
-    };
+  };
 
     response.status(statusCode).json({ message: message });
     logToFile(`UserController.js: ${err}`);
     console.log(`UserController.js: ${err}`);
-  };
+};
 
 
   /* === NOMINATION GET ROUTES === */
@@ -221,5 +221,69 @@ router.post('/new', async (request, response) => {
 
 /* === NOMINATION PATCH ROUTES === */
 
+// TODO Add authorisation
+// PATCH SnrMgr and Admin to promote from nomination to award
+// eg: PATCH localhost:3000/nominations/update/nom/5f2f8e3d2b8e9a0017b0e9f0
+router.patch('/update/nom/:id', async (request, response) => {
+  try {
+    // creates object of keys from request body
+    const updates = Object.keys(request.body);
+    // so as to limit update to only allowed updates: userTagLine
+    const allowedUpdates = ['isAward', 'isReleased', 'releaseDate'];
+
+    // applies updated values to user object
+    const isValid = updates.every((update) => allowedUpdates.includes(update));
+
+    // if trying to update a non-updatable field, return error
+    if (!isValid) {
+      return response.status(400).send({ error: 'Your intent is good but there is something in there that we can\'t update.' });
+    }
+
+    // otherwise... update
+    const updateAward = await Nomination.findById(request.params.id);
+
+    // if person does not exist, return error
+    if (!updateAward) {
+      return response.status(404).send({ error: 'Hmm. We can\'t find that nomination.' });
+    }
+
+    // otherwise... update
+    updates.forEach((update) => updateAward[update] = request.body[update]);
+    await updateAward.save();
+
+    response.send(updateAward);
+
+    response.json({
+      Nominations: updateAward
+    });
+
+  } catch (err) {
+    errorSwtich(err, response);
+  }
+});
 
 
+
+/* === NOMINATION DELETE ROUTES === */
+
+// DELETE admin by id
+// eg DELETE localhost:3000/nominations/delete/5f2f8e3d2b8e9a0017b0e9f0
+router.delete('/delete/:id', async (request, response) => {
+  try {
+    const result = await Nomination.findByIdAndDelete(request.params.id);
+
+    if (!result) {
+      return response.status(404).send({ error: 'Hmm. We can\'t find that nomination.' });
+    }
+
+    response.json({
+      Nominations: result
+    });
+
+  } catch (err) {
+    errorSwtich(err, response);
+  }
+});
+
+
+module.exports = router;
