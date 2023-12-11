@@ -221,6 +221,7 @@ router.post('/new', async (request, response) => {
 
 /* === NOMINATION PATCH ROUTES === */
 
+
 // TODO Add authorisation
 // PATCH SnrMgr and Admin to promote from nomination to award
 // eg: PATCH localhost:3000/nominations/update/nom/5f2f8e3d2b8e9a0017b0e9f0
@@ -287,3 +288,4 @@ router.delete('/delete/:id', async (request, response) => {
 
 
 module.exports = router;
+
