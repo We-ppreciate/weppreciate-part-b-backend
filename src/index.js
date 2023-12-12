@@ -7,7 +7,7 @@ const { databaseConnect } = require('./database');
 const { logToFile } = require('./functions/logToFile');
 const { app } = require('./server');
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, async () => {
 	try {
