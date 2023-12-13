@@ -5,7 +5,7 @@ const { databaseConnect, databaseClose } = require('../database');
 const { User } = require('../models/UserModel');
 const { Nomination } = require('../models/NominationModel');
 const { Comments } = require('../models/CommentModel');
-const { Category } = require('../models/CategoryModels');
+const { Category } = require('../models/CategoryModel');
 const { logToFile } = require('../functions/logToFile');
 
 

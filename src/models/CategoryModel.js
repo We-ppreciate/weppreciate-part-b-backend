@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 // Award categories used for non-instant thanks
-// const awardEnum = ['Say/Do', 'Commitment', 'Collborate', 'Challenging', 'Learning', 'Spirited']
+// const awardEnum = ['Say/Do', 'Commitment', 'Collborate', 'Challenging', 'Learning', 'Spirited', 'Instant']
 
 const CategorySchema = new mongoose.Schema({
   categoryName: {

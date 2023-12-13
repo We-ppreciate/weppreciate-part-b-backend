@@ -1,8 +1,13 @@
+const mongoose = require('mongoose');
 require('dotenv').config();
 
-const mongoose = require('mongoose');
 const { databaseConnect, databaseClose } = require('../database');
-const { Category } = require('../models/CategoryModels');
+const { User } = require('../models/UserModel');
+const { Nomination } = require('../models/NominationModel');
+const { Comments } = require('../models/CommentModel');
+const { Category } = require('../models/CategoryModel');
+const { logToFile } = require('../functions/logToFile');
+
 
 
 databaseConnect().then(async () => {
@@ -10,49 +15,49 @@ databaseConnect().then(async () => {
   const awardCategories = ['Say/Do', 'Commitment', 'Collborate', 'Challenging', 'Learning', 'Spirited'];
   
   const sayDo = new Category({
-    categoryName: awardCategories[0],
+    categoryName: 'Say/Do',
     categoryDescription: 'Doing what you say',
     championAnimal: 'cat',
     categoryImage: 'https://storage.googleapis.com/weppreciate-store/award/anima_cat.png'
   });
   
   const commitment = new Category({
-    categoryName: awardCategories[1],
+    categoryName: 'Commitment',
     categoryDescription: 'Having the commitment to follow through',
     championAnimal: 'cat',
     categoryImage: 'https://storage.googleapis.com/weppreciate-store/award/anima_cat.png'
   });
   
   const collaborate = new Category({
-    categoryName: awardCategories[2],
+    categoryName: 'Collborate',
     categoryDescription: 'Collaborating like a boss',
     championAnimal: 'cat',
     categoryImage: 'https://storage.googleapis.com/weppreciate-store/award/anima_cat.png'
   });
   
   const Challenging = new Category({
-    categoryName: awardCategories[3],
+    categoryName: 'Challenging',
     categoryDescription: 'Challenging all the things',
     championAnimal: 'cat',
     categoryImage: 'https://storage.googleapis.com/weppreciate-store/award/anima_cat.png'
   });
   
   const learning = new Category({
-    categoryName: awardCategories[4],
+    categoryName: 'Learning',
     categoryDescription: 'Learning all the time',
     championAnimal: 'cat',
     categoryImage: 'https://storage.googleapis.com/weppreciate-store/award/anima_cat.png'
   });
   
   const spirited = new Category({
-    categoryName: awardCategories[5],
+    categoryName: 'Spirited',
     categoryDescription: 'Fire spirit',
     championAnimal: 'cat',
     categoryImage: 'https://storage.googleapis.com/weppreciate-store/award/anima_cat.png'
   });
   
   const instant = new Category({
-    categoryName: awardCategories[6],
+    categoryName: 'Instant',
     categoryDescription: 'Instant thanks',
     championAnimal: 'cat',
     categoryImage: 'https://storage.googleapis.com/weppreciate-store/award/anima_cat.png'
