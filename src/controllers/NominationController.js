@@ -3,38 +3,39 @@ const router = express.Router();
 const { Nomination } = require('../models/NominationModel');
 const { User } = require('../models/UserModel');
 const { logToFile } = require('../functions/logToFile');
+const { errorSwtich } = require('./ErrorController');
 
 
-/* === ERROR HANDLING SWITCH === */
+// /* REMOVE IF NOT BROKEN */
 
 
-const errorSwtich = (err, response) => {
-  let statusCode = 500;
-  let message = `Sorry. That\'s a problem on our side. Look like Mavis spilled her tea on the server. ${err}`;
+// const errorSwtich = (err, response) => {
+//   let statusCode = 500;
+//   let message = `Sorry. That\'s a problem on our side. Look like Mavis spilled her tea on the server. ${err}`;
 
-  switch (err) {
-    case 400:
-      statusCode = 400;
-      message = `Your intent is good but the request was bad. ${err}`;
-      break;
-    case 403:
-      statusCode = 403;
-      message = `You are not authorised to do that. We'pologise. ${err}`;
-      break;
-    case 404:
-      statusCode = 404;
-      message = `This is not the page you are looking for. ${err}`;
-      break;
-    default:
-      statusCode = 500;
-      message = `Sorry. That's a problem on our side. Mavis is looking into it now... well, she will, after her tea. ${err}`
-      break;      
-  };
+//   switch (err) {
+//     case 400:
+//       statusCode = 400;
+//       message = `Your intent is good but the request was bad. ${err}`;
+//       break;
+//     case 403:
+//       statusCode = 403;
+//       message = `You are not authorised to do that. We'pologise. ${err}`;
+//       break;
+//     case 404:
+//       statusCode = 404;
+//       message = `This is not the page you are looking for. ${err}`;
+//       break;
+//     default:
+//       statusCode = 500;
+//       message = `Sorry. That's a problem on our side. Mavis is looking into it now... well, she will, after her tea. ${err}`
+//       break;      
+//   };
 
-    response.status(statusCode).json({ message: message });
-    logToFile(`UserController.js: ${err}`);
-    console.log(`UserController.js: ${err}`);
-};
+//     response.status(statusCode).json({ message: message });
+//     logToFile(`UserController.js: ${err}`);
+//     console.log(`UserController.js: ${err}`);
+// };
 
 
   /* === NOMINATION GET ROUTES === */
@@ -50,9 +51,9 @@ const errorSwtich = (err, response) => {
         Nominations: result
       });
 
-    } catch (err) {
-      errorSwtich(err, response);
-    }
+  } catch (err) {
+    errorSwtich(err, response);
+  }
   });
 
   // GET all nominations by recipient id
@@ -65,9 +66,9 @@ const errorSwtich = (err, response) => {
         Nominations: result
       });
 
-    } catch (err) {
-      errorSwtich(err, response);
-    }
+  } catch (err) {
+    errorSwtich(err, response);
+  }
   });
 
 
@@ -132,9 +133,9 @@ router.get('/all/nominator/:firstName/:lastName', async (request, response) => {
         Nominations: result
       });
 
-    } catch (err) {
-      errorSwtich(err, response);
-    }
+  } catch (err) {
+    errorSwtich(err, response);
+  }
   });
 
 
@@ -148,9 +149,9 @@ router.get('/all/nominator/:firstName/:lastName', async (request, response) => {
         Nominations: result
       });
 
-    } catch (err) {
-      errorSwtich(err, response);
-    }
+  } catch (err) {
+    errorSwtich(err, response);
+  }
   });
 
 
@@ -164,9 +165,9 @@ router.get('/all/nominator/:firstName/:lastName', async (request, response) => {
         Nominations: result
       });
 
-    } catch (err) {
-      errorSwtich(err, response);
-    }
+  } catch (err) {
+    errorSwtich(err, response);
+  }
   });
 
 
@@ -180,9 +181,9 @@ router.get('/all/nominator/:firstName/:lastName', async (request, response) => {
         Nominations: result
       });
 
-    } catch (err) {
-      errorSwtich(err, response);
-    }
+  } catch (err) {
+    errorSwtich(err, response);
+  }
   });
 
 module.exports = router;

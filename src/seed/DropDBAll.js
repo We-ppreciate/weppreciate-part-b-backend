@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
-const { User } = require('./models/UserModel');
-const { databaseConnect, databaseClose } = require('./database');
-const { logToFile } = require('./functions/logToFile');
-const { Nomination } = require('./models/NominationModel');
+const { User } = require('../models/UserModel');
+const { databaseConnect, databaseClose } = require('../database');
+const { logToFile } = require('../functions/logToFile');
+const { Nomination } = require('../models/NominationModel');
 require('dotenv').config();
 
 
