@@ -51,9 +51,9 @@ const { errorSwtich } = require('./ErrorController');
         Nominations: result
       });
 
-  } catch (err) {
-    errorSwtich(err, response);
-  }
+    } catch (err) {
+      errorSwtich(err, response);
+    }
   });
 
   // GET all nominations by recipient id
@@ -66,9 +66,9 @@ const { errorSwtich } = require('./ErrorController');
         Nominations: result
       });
 
-  } catch (err) {
-    errorSwtich(err, response);
-  }
+    } catch (err) {
+      errorSwtich(err, response);
+    }
   });
 
 
@@ -102,8 +102,8 @@ router.get('/all/nominator/:firstName/:lastName', async (request, response) => {
             'nominatorBasicUser.basicName.last': {$regex: new RegExp(`^${lastName}$`, 'i') } 
           }
         ]
-      });
-    }
+      })
+    };
   
     response.json({
       Nominations: result
@@ -133,9 +133,9 @@ router.get('/all/nominator/:firstName/:lastName', async (request, response) => {
         Nominations: result
       });
 
-  } catch (err) {
-    errorSwtich(err, response);
-  }
+    } catch (err) {
+      errorSwtich(err, response);
+    }
   });
 
 
@@ -165,9 +165,9 @@ router.get('/all/nominator/:firstName/:lastName', async (request, response) => {
         Nominations: result
       });
 
-  } catch (err) {
-    errorSwtich(err, response);
-  }
+    } catch (err) {
+      errorSwtich(err, response);
+    }
   });
 
 
@@ -181,9 +181,9 @@ router.get('/all/nominator/:firstName/:lastName', async (request, response) => {
         Nominations: result
       });
 
-  } catch (err) {
-    errorSwtich(err, response);
-  }
+    } catch (err) {
+      errorSwtich(err, response);
+    }
   });
 
 module.exports = router;
@@ -214,9 +214,9 @@ router.post('/new', async (request, response) => {
       User: result
     });
     
-  } catch (err) {
-    errorSwtich(err, response);
-  }
+    } catch (err) {
+      errorSwtich(err, response);
+    }
 });
 
 

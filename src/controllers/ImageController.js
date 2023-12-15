@@ -1,60 +1,39 @@
 const express = require('express');
 const router = express.Router();
-require('dotenv').config(); 
-const { errorSwtich } = require('./ErrorController');
-
+require('dotenv').config();
+const { errorSwitch } = require('./ErrorController');
 const { logToFile } = require('../functions/logToFile');
-
-
-/* REMOVE IF NOT BROKEN */
-
-// const errorSwtich = (err, response) => {
-//   let statusCode = 500;
-//   let message = `Sorry. That\'s a problem on our side. Look like Mavis spilled her tea on the server. ${err}`;
-  
-//   switch (err) {
-//     case 400:
-//       statusCode = 400;
-//       message = `Your intent is good but the request was bad. ${err}`;
-//       break;
-//     case 403:
-//       statusCode = 403;
-//       message = `You are not authorised to do that. We'pologise. ${err}`;
-//       break;
-//     case 404:
-//       statusCode = 404;
-//       message = `This is not the page you are looking for. ${err}`;
-//       break;
-//     default:
-//       statusCode = 500;
-//       message = `Sorry. That's a problem on our side. Mavis is looking into it now... well, she will, after her tea. ${err}`
-//       break;      
-//   };
-          
-//   response.status(statusCode).json({ message: message });
-//   logToFile(`UserController.js: ${err}`);
-//   console.log(`UserController.js: ${err}`);
-// };
+const { Storage } = require('@google-cloud/storage');
         
 
-// let projectId = process.env.GOOGLE_PROJECT_ID;
-// let keyFilename = process.env.GOOGLE_KEY_FILENAME;
-// const storage = new Storage({ projectId, keyFilename });
-// const bucket = storage.bucket(process.env.GOOGLE_BUCKET);
+let projectId = process.env.GOOGLE_PROJECT_ID;
+let keyFilename = process.env.GOOGLE_KEY_FILENAME;
+
+const storage = new Storage({ projectId, keyFilename });
+const bucketName = process.env.GOOGLE_BUCKET;
+const bucket = storage.bucket(bucketName);
 
 
-// router.get('/nom/:image', async (request, response) => {
-//   try {
-//     const image = request.params.image;
-//     response.sendFile(image, { root: './public/uploads/' });
-//   } catch (err) {
-//     errorSwtich(err, response);
-//   }
-// });
+  // GET one image in a given folder
+  // eg for award image: GET localhost:3000/api-img/award/anima_cat.png
+  // eg for a profile image: GET localhost:3000/api-img/profile/00016-4146151794.png
+router.get('/:folder/:image', async (request, response) => {
+  try {
+    const image = `${request.params.folder}/${request.params.image}`;
+    const file = bucket.file(image);
+    const stream = file.createReadStream();
+    stream.on('error', (err) => {
+      // errorSwitch(err, response);
+      console.log(err);
+    });
+
+    response.setHeader('Content-Type', file.metadata.contentType || 'application/octet-stream');
+    stream.pipe(response);
+  } catch (err) {
+    // errorSwitch(err, response);
+    console.log(err);
+  }
+});
 
 
-
-
-
-
-// module.exports = router;
+module.exports = router;
