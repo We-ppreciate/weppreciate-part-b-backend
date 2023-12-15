@@ -1,5 +1,6 @@
 const express = require('express');
 
+
 // Error handling switch
 const errorSwitch = (err, response) => {
   let statusCode = 500;
