@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const { logToFile } = require('./functions/logToFile');
 require('dotenv').config();
 
+// .
+
 async function databaseConnect(){
 	try {
 		// DB connection can take some time, eg. if DB is in the cloud 

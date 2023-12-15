@@ -16,6 +16,8 @@ app.use(cors(corsOptions));
 // Enables request.body to be raw JSON data 
 app.use(express.json());
 
+// ====================
+
 // root API response
 app.get("/", (request, response) => {
 	response.json({
@@ -25,15 +27,19 @@ app.get("/", (request, response) => {
 
 const { logToFile } = require('./functions/logToFile');
 
+
 const { User } = require('./models/UserModel');
 const UserRouter = require('./controllers/UserController');
 
 app.use('/users', UserRouter);
 
+
 const { Nomination } = require('./models/NominationModel');
 const NominationRouter = require('./controllers/NominationController');
 
 app.use('/nominations', NominationRouter);
+
+app.use('/api-img', require('./controllers/ImageController'));
 
 // GET ALL OTHER ROUTES
 app.get('*', (request, response) => {
