@@ -5,6 +5,7 @@ const { logToFile } = require('../functions/logToFile');
 const { errorSwtich } = require('./ErrorController');
 
 
+
 /* === USER GET ROUTES === */
 
 // GET all users in db
