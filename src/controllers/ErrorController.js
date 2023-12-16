@@ -1,12 +1,12 @@
 const express = require('express');
+const { logToFile } = require('../functions/logToFile');
 
 
 // Error handling switch
 const errorSwitch = (err, response) => {
-  let statusCode = 500;
+  // let statusCode = 500;
 
-  let message = `Sorry. That\'s a problem on our side. Look like Mavis spilled her tea on the server. ${err}`;
-
+  // let message = `Sorry. That\'s a problem on our side. Look like Mavis spilled her tea on the server. ${err}`;
 
   switch (err) {
     case 400:
@@ -33,4 +33,6 @@ const errorSwitch = (err, response) => {
 
 };
 
-module.exports = errorSwitch;
+module.exports = {
+  errorSwitch
+};

@@ -17,6 +17,12 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 // ====================
+const { logToFile } = require('./functions/logToFile');
+const { User } = require('./models/UserModel');
+const UserRouter = require('./controllers/UserController');
+const { Nomination } = require('./models/NominationModel');
+const NominationRouter = require('./controllers/NominationController');
+const AuthRouter = require('./controllers/AuthController');
 
 // root API response
 app.get("/", (request, response) => {
@@ -25,21 +31,15 @@ app.get("/", (request, response) => {
 	});
 });
 
-const { logToFile } = require('./functions/logToFile');
 
-
-const { User } = require('./models/UserModel');
-const UserRouter = require('./controllers/UserController');
+app.use('/auth', AuthRouter);
 
 app.use('/users', UserRouter);
-
-
-const { Nomination } = require('./models/NominationModel');
-const NominationRouter = require('./controllers/NominationController');
 
 app.use('/nominations', NominationRouter);
 
 app.use('/api-img', require('./controllers/ImageController'));
+
 
 // GET ALL OTHER ROUTES
 app.get('*', (request, response) => {

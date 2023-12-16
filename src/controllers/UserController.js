@@ -56,7 +56,6 @@ router.get('/one/id/:id', async (request, response) => {
 });
 
 // GET user by name
-
 // eg: GET localhost:3000/users/one/name/katie/lock
 router.get('/one/name/:firstName/:lastName', async (request, response) => {
   try {
@@ -105,6 +104,26 @@ router.get('/all/manager/:id', async (request, response) => {
     
     response.json({
       User: result
+    });
+    
+  } catch (err) {
+    errorSwtich(err, response);
+  }
+});
+
+// GET user by email
+// eg: GET localhost:3000/users/one/email
+router.get('/one/email', async (request, response) => {
+  try {
+    // Removed case sensitivity from query params
+    const { email } = request.body;
+
+    const emailRegex = new RegExp(email, 'i'); // 'i' makes it case insensitive
+    
+    const result = await User.findOne({ 'email': { $regex: emailRegex } });
+    
+    response.json({
+      Users: result
     });
     
   } catch (err) {

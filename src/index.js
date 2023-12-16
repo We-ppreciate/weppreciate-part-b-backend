@@ -9,7 +9,7 @@ const { app } = require('./server');
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, async () => {
+const server = app.listen(PORT, async () => {
 	try {
 		await databaseConnect();
 		logToFile(`index.js: Server started on port ${PORT}`);

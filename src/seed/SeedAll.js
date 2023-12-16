@@ -4,45 +4,95 @@ const mongoose = require('mongoose');
 const { databaseConnect, databaseClose } = require('../database');
 const { User } = require('../models/UserModel');
 const { Nomination } = require('../models/NominationModel');
-const { Comments } = require('../models/CommentModel');
+const { Comment } = require('../models/CommentModel');
 const { Category } = require('../models/CategoryModel');
 const { logToFile } = require('../functions/logToFile');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 
-/*
-  USER SEED DATA
-
-  This file is used to seed the database with some initial data.
-  TODO: MAKE DRY
-*/
 
 
-// {
-//   _id: objectId,
-//   name: {
-//    first: string,
-//    last: string
-//   },
-//   email: string
-//   businessUnit: string,
-//   passwordHash: string,
-//   lineManagerId: null, -> is added later, after line manager created
-//   userTagLine: string,
-//   userPhotoKey: stirng,
-//   isFullUser: boolean,
-//   isLineManager: boolean,
-//   isSeniorManager: boolean,
-//   isAdmin: boolean,
-// }
+/* === Password Hashes === */
+
+let passwords = [
+  {
+    email: 'nate.picone@yourcompany.com',
+    password: 'password',
+    passwordHash: null
+  },
+  {
+    email: 'ed.dougherty@yourcompany.com',
+    password: 'password234',
+    passwordHash: null
+  },
+  {
+    email: 'Hannah.Sallows@yourcompany.com',
+    password: 'password456',
+    passwordHash: null
+  },
+  {
+    email: 'Katie.Lock@yourcompany.com',
+    password: 'password678',
+    passwordHash: null
+  },
+  {
+    email: 'Alex.Greatbeard@yourcompany.com',
+    password: 'password789',
+    passwordHash: null
+  },
+  {
+    email: 'Carolina.Reaper@yourcompany.com',
+    password: 'password890',
+    passwordHash: null
+  }
+]
+
+const passwordHashForSeed = async () => {
+  for (let i = 0; i < passwords.length; i++) {
+    try {
+      passwords[i].passwordHash = await bcrypt.hash(passwords[i].password, 10);
+      
+    } catch (error) {
+      logToFile(`seed.js: ${error}`);
+      console.log(`seed.js: ${error}`);
+    }
+  }
+  passwords.push(...passwords);
+  // console.log(passwords);
+}
+
+passwordHashForSeed();
+
+
+/* === SEED FUNCTION STARTS === */
 
 databaseConnect().then(async () => {
   logToFile('=== seed.js executed ===');
-  logToFile('seed,js: Creating user seed data!');
+  logToFile('seed.js: Creating user seed data!');
   console.log('=== seed.js executed ===');
   console.log('seed,js: Creating user seed data!')
 
 
-  /* USER SEED DATA */
+  /* === USER SEED DATA === */
+  // {
+  //   _id: objectId,
+  //   name: {
+  //    first: string,
+  //    last: string
+  //   },
+  //   email: string
+  //   businessUnit: string,
+  //   passwordHash: string,
+  //   lineManagerId: null, -> is added later, after line manager created
+  //   userTagLine: string,
+  //   userPhotoKey: string,
+  //   isFullUser: boolean,
+  //   isLineManager: boolean,
+  //   isSeniorManager: boolean,
+  //   isAdmin: boolean,
+  // } 
+
   
   const natePicone = new User({
     _id: new mongoose.Types.ObjectId(),
@@ -51,9 +101,9 @@ databaseConnect().then(async () => {
       last: 'Picone'
     },
 
-    email: `nate.picone@yourcompany.com`,
+    email: 'nate.picone@yourcompany.com',
     businessUnit: 'Business Services',
-    passwordHash: 'replacethiswithhash',
+    passwordHash: passwords.find(obj => obj.email === 'nate.picone@yourcompany.com').passwordHash,
     lineManagerId: null,
     userTagLine: 'Tell me your access issue and I will make it go away.',
     userPhotoKey: 'replacewithURL',
@@ -71,15 +121,15 @@ databaseConnect().then(async () => {
   });
 
   const edDougherty = new User({
-    id: new mongoose.Types.ObjectId(),
+    _id: new mongoose.Types.ObjectId(),
     name: {
       first: 'Ed',
       last: 'Dougherty'
     },
 
-    email: `ed.dougherty@yourcompany.com`,
+    email: 'ed.dougherty@yourcompany.com',
     businessUnit: 'Business Services',
-    passwordHash: 'replacethiswithhash',
+    passwordHash: passwords.find(obj => obj.email === 'ed.dougherty@yourcompany.com').passwordHash,
     lineManagerId: null,
     userTagLine: 'Building a better tomorrow, today.',
     userPhotoKey: 'replacewithURL',
@@ -97,14 +147,14 @@ databaseConnect().then(async () => {
   });
 
   const hannahSallows = new User({
-    id: new mongoose.Types.ObjectId(),
+    _id: new mongoose.Types.ObjectId(),
     name: {
       first: 'Hannah',
       last: 'Sallows'
     },
-    email: `Hannah.Sallows@yourcompany.com`,
+    email: 'Hannah.Sallows@yourcompany.com',
     businessUnit: 'Business Services',
-    passwordHash: 'replacethiswithhash',
+    passwordHash: passwords.find(obj => obj.email === 'Hannah.Sallows@yourcompany.com').passwordHash,
     lineManagerId: null,
     userTagLine: 'Working collaboratively for moments that matter.',
     userPhotoKey: 'replacewithURL',
@@ -122,14 +172,14 @@ databaseConnect().then(async () => {
   });
 
   const katieLock = new User({
-    id: new mongoose.Types.ObjectId(),
+    _id: new mongoose.Types.ObjectId(),
     name: {
       first: 'Katie',
       last: 'Lock'
     },
-    email: `Katie.Lock@yourcompany.com`,
+    email: 'Katie.Lock@yourcompany.com',
     businessUnit: 'HR Business Partnership',
-    passwordHash: 'replacethiswithhash',
+    passwordHash: passwords.find(obj => obj.email === 'Katie.Lock@yourcompany.com').passwordHash,
     lineManagerId: null,
     userTagLine: 'Helping people achieve their goals.',
     userPhotoKey: 'replacewithURL',
@@ -147,14 +197,14 @@ databaseConnect().then(async () => {
   });
 
   const jordanBenjamin = new User({
-    id: new mongoose.Types.ObjectId(),
+    _id: new mongoose.Types.ObjectId(),
     name: {
       first: 'Jordan',
       last: 'Benjamin'
     },
-    email: `Jordan.Benjamin@yourcompany.com`,
+    email: 'Jordan.Benjamin@yourcompany.com',
     businessUnit: 'Art',
-    passwordHash: 'replacethiswithhash',
+    passwordHash: null,
     lineManagerId: null,
     userTagLine: 'Creating Beautiful things',
     userPhotoKey: 'replacewithURL',
@@ -171,24 +221,79 @@ databaseConnect().then(async () => {
     console.log(`seed.js: ${jordanBenjamin.name} saved, with id ${jordanBenjamin._id}\n${jordanBenjamin}`);
   });
 
+  const alexGreatbeard = new User({
+    _id: new mongoose.Types.ObjectId(),
+    name: {
+      first: 'Alex',
+      last: 'Greatbeard'
+    },
+    email: 'Alex.Greatbeard@yourcompany.com',
+    businessUnit: 'Pokemon Development',
+    passwordHash: passwords.find(obj => obj.email === 'Alex.Greatbeard@yourcompany.com').passwordHash,
+    lineManagerId: null,
+    userTagLine: 'One more than eight tendos',
+    userPhotoKey: 'replacewithURL',
+    isFullUser: true,
+    isLineManager: false,
+    isSeniorManager: false,
+    isAdmin: false,
+  });
+
+  alexGreatbeard.upn = alexGreatbeard.email.split('@')[0];
+
+  await alexGreatbeard.save().then(() => {
+    logToFile(`seed.js: ${alexGreatbeard.name} saved, with id ${alexGreatbeard._id}\n${alexGreatbeard}`);
+    console.log(`seed.js: ${alexGreatbeard.name} saved, with id ${alexGreatbeard._id}\n${alexGreatbeard}`);
+  });
+
+  const carolinaReaper = new User({
+    _id: new mongoose.Types.ObjectId(),
+    name: {
+      first: 'Carolina',
+      last: 'Reaper'
+    },
+    email: 'Carolina.Reaper@yourcompany.com',
+    businessUnit: 'Business Services',
+    passwordHash: passwords.find(obj => obj.email === 'Carolina.Reaper@yourcompany.com').passwordHash,
+    lineManagerId: null,
+    userTagLine: 'It\'s a bit chilly in here',
+    userPhotoKey: 'replacewithURL',
+    isFullUser: true,
+    isLineManager: true,
+    isSeniorManager: true,
+    isAdmin: false,
+  });
+
+  carolinaReaper.upn = carolinaReaper.email.split('@')[0];
+
+  await carolinaReaper.save().then(() => {
+    logToFile(`seed.js: ${carolinaReaper.name} saved, with id ${carolinaReaper._id}\n${carolinaReaper}`);
+    console.log(`seed.js: ${carolinaReaper.name} saved, with id ${carolinaReaper._id}\n${carolinaReaper}`);
+  });
+
   // Update line manager details
   try {
     await User.findOneAndUpdate({ _id: natePicone._id }, { lineManagerId: edDougherty._id }, { new: true });
     logToFile(`seed.js: ${natePicone.name} updated, with line manager`);
     console.log(`seed.js: ${natePicone.name} updated, with line manager`);
-  } catch (error) {
-    logToFile(`seed.js: ${error}`);
-    console.log(`seed.js: ${error}`);
-  }    
-
-  try {
+    
     await User.findOneAndUpdate({ _id: edDougherty._id }, { lineManagerId: hannahSallows._id }, { new: true });
     logToFile(`seed.js: ${edDougherty.name} updated, with line manager`);
     console.log(`seed.js: ${edDougherty.name} updated, with line manager`);
+
+    await User.findOneAndUpdate({ _id: alexGreatbeard._id }, { lineManagerId: hannahSallows._id }, { new: true });
+    logToFile(`seed.js: ${alexGreatbeard.name} updated, with line manager`);
+    console.log(`seed.js: ${alexGreatbeard.name} updated, with line manager`);
+
+    await User.findOneAndUpdate({ _id: hannahSallows._id }, { lineManagerId: carolinaReaper._id }, { new: true });
+    logToFile(`seed.js: ${carolinaReaper.name} updated, with line manager`);
+    console.log(`seed.js: ${carolinaReaper.name} updated, with line manager`);
+
+
   } catch (error) {
     logToFile(`seed.js: ${error}`);
     console.log(`seed.js: ${error}`);
-  }  
+  } 
   
 
   /* NOMINATION SEED DATA */
@@ -221,7 +326,7 @@ databaseConnect().then(async () => {
     nominatorBasicUser: null,
     nominationValue: 'Commitment',
     nominationBody: 'Nate is a great guy!',
-    nominationDate: '2023-12-09',
+    nominationDate: '09-12-2023',
     isNominatorFullUser: true,
     isAward: false,
     isNominationInstant: true,
@@ -241,7 +346,7 @@ databaseConnect().then(async () => {
     nominatorBasicUser: null,
     nominationValue: 'Commitment',
     nominationBody: 'Ed is also a great guy!',
-    nominationDate: '2023-12-02',
+    nominationDate: '02-12-2023',
     isNominatorFullUser: true,
     isAward: false,
     isNominationInstant: true,
@@ -268,7 +373,7 @@ databaseConnect().then(async () => {
     },
     nominationValue: 'Challenging',
     nominationBody: 'Ed is a challenger!',
-    nominationDate: '2023-12-10',
+    nominationDate: '10-12-2023',
     isNominationInstant: false,
     isNominatorFullUser: false,
     isAward: false,
@@ -284,11 +389,11 @@ databaseConnect().then(async () => {
   const nominateKatie = new Nomination({
     _id: new mongoose.Types.ObjectId(),
     recipientUser: katieLock,
-    nominatorFullUser: katieLock,
+    nominatorFullUser: edDougherty,
     nominatorBasicUser: null,
     nominationValue: 'Commitment',
     nominationBody: 'Katie deserves this because of the thing what she did at the time.',
-    nominationDate: '2023-11-02',
+    nominationDate: '02-11-2023',
     isNominatorFullUser: true,
     isAward: true,
     isNominationInstant: true,
