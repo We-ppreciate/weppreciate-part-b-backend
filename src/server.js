@@ -17,6 +17,12 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 // ====================
+const { logToFile } = require('./functions/logToFile');
+const { User } = require('./models/UserModel');
+const UserRouter = require('./controllers/UserController');
+const { Nomination } = require('./models/NominationModel');
+const NominationRouter = require('./controllers/NominationController');
+const AuthRouter = require('./controllers/AuthController');
 
 const { logToFile } = require('./functions/logToFile');
 const { User } = require('./models/UserModel');
@@ -32,9 +38,12 @@ app.get("/", (request, response) => {
 	});
 });
 
+app.use('/auth', AuthRouter);
+
 app.use('/users', UserRouter);
 
 app.use('/nominations', NominationRouter);
+
 
 
 // GET ALL OTHER ROUTES

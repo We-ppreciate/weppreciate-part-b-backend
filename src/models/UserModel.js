@@ -53,7 +53,9 @@ const UserSchema = new mongoose.Schema({
     // TODO: Change required dependency after testing
     required: false,
     // required: [true, 'Password is missing.'],
-    unique: false
+    unique: false,
+    // prevents password being automatically returned
+    select: false
   },
   // TODO: Change this to ObjectId
   lineManagerId: {

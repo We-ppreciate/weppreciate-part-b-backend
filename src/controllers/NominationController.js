@@ -60,7 +60,12 @@ const errorSwtich = (err, response) => {
   // eg GET localhost:3000/nominations/all/recipient/5f2f8e3d2b8e9a0017b0e9f0
   router.get('/all/recipient/:id', async (request, response) => {
     try {
-      const result = await Nomination.find({recipientUser: request.params.id});
+      const { id } = request.params;
+
+      if (!id) {
+        return response.status(400).send({ error: 'ID not provided.' });
+      }
+      const result = await Nomination.find({recipientUser: id});
 
       response.json({
         Nominations: result
@@ -71,6 +76,19 @@ const errorSwtich = (err, response) => {
     }
   });
 
+  /* WAS:
+  router.get('/all/recipient/:id', async (request, response) => {
+    try {
+      const result = await Nomination.find({recipientUser: request.params.id});
+
+      response.json({
+        Nominations: result
+      });
+    } catch (err) {
+      errorSwtich(err, response);
+    }
+  });
+  */
 
   // GET all nominations by nominator fullUser name or basicUser name
   // eg GET localhost:3000/nominations/all/nominator/name/ed/dogherty
