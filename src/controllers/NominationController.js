@@ -3,7 +3,6 @@ const router = express.Router();
 const { Nomination } = require('../models/NominationModel');
 const { User } = require('../models/UserModel');
 const { logToFile } = require('../functions/logToFile');
-// const { errorSwtich } = require('./ErrorController');
 
 
 // /* REMOVE IF NOT BROKEN */

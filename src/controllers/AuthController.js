@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const { errorSwitch } = require('./ErrorController');
-const { logToFile } = require('../functions/logToFile');
+
+// const { logToFile } = require('../functions/logToFile');
+
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models/UserModel');
