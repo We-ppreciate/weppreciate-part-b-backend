@@ -23,26 +23,26 @@ router.get('/user', async (request, response) => {
 
 /* === POST === */
 
-router.post('/user', async (request, response) => {
-  try {
-    // Authenticate User
-    const hashedPassword = await bcrypt.hash(request.body.password, 10);
-    const user = {
-      email: request.body.email, 
-      password: hashedPassword
-    };
-    console.log(hashedPassword);
-    users.push(user);
-    response.status(201).send();
-  } catch (err) {
-    console.log(err);
-    response.status(500).json({ error: 'Internal Server Error' })
-    // errorSwitch(err, response);
-  } finally {
-    console.log(users);
-  }
+// router.post('/user', async (request, response) => {
+//   try {
+//     // Authenticate User
+//     const hashedPassword = await bcrypt.hash(request.body.password, 10);
+//     const user = {
+//       email: request.body.email, 
+//       password: hashedPassword
+//     };
+//     console.log(hashedPassword);
+//     users.push(user);
+//     response.status(201).send();
+//   } catch (err) {
+//     console.log(err);
+//     response.status(500).json({ error: 'Internal Server Error' })
+//     // errorSwitch(err, response);
+//   } finally {
+//     console.log(users);
+//   }
 
-});
+// });
 
 
 router.post('/login', async (request, response) => {

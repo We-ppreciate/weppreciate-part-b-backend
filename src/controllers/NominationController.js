@@ -212,6 +212,28 @@ module.exports = router;
 // POST new nomination
 // eg: POST localhost:3000/nominations/new
 /* ADD AUTHORISATION */
+
+  // JSON Template:
+  // { 
+  //   "recipientUser": ,
+  //   "nominatorFullUser": ,
+  //   "nominatorBasicUser": {
+  //     "basicName": {
+  //       "first": ,
+  //       "last": ,
+  //     },
+  //     "basicEmail": ,
+  //   },
+  //   "nominationValue": ,
+  //   "nominationBody": ,
+  //   "nominationDate": ,
+  //   "isNominatorFullUser": ,
+  //   "isNominationInstant": ,
+  //   "isAward": ,
+  //   "isReleased": ,
+  //   "releaseDate": ,
+  // }
+
 router.post('/new', async (request, response) => {
   try {
     const { recipientUser, nominatorFullUser } = request.body;
