@@ -1,7 +1,6 @@
 const request = require('supertest');
 const { app } = require('../server');
 const { Nomination } = require('../models/NominationModel');
-const { User } = require('../models/UserModel');
 // const { errorSwitch } = require('../controllers/ErrorController');
 const express = require('express');
 const router = express.Router();
