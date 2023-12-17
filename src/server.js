@@ -34,10 +34,9 @@ app.get("/", (request, response) => {
 	});
 });
 
+// === MIDDLEWARE ===
 app.use('/auth', AuthRouter);
-
 app.use('/users', UserRouter);
-
 app.use('/nominations', NominationRouter);
 
 
