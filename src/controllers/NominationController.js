@@ -3,7 +3,9 @@ const router = express.Router();
 const { Nomination } = require('../models/NominationModel');
 const { User } = require('../models/UserModel');
 const { logToFile } = require('../functions/logToFile');
+
 const auth = require('../functions/verifyToken');
+
 
 
 // /* REMOVE IF NOT BROKEN */
@@ -235,7 +237,9 @@ module.exports = router;
   //   "releaseDate": ,
   // }
 
+
 router.post('/new', auth, async (request, response) => {
+
   try {
     const { recipientUser, nominatorFullUser } = request.body;
 

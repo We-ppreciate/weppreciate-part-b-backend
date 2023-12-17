@@ -25,8 +25,10 @@ router.get('/user', async (request, response) => {
 
 /* === POST === */
 
+
 // POST login
 // eg POST localhost:3000/auth/login
+
 router.post('/login', async (request, response) => {
   try {
     const user = await User.findOne({ email: request.body.email }).select('+passwordHash');

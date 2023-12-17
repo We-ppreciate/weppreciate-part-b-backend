@@ -142,7 +142,9 @@ router.get('/all/manager/:id', auth, async (request, response) => {
 
 // GET user by email
 // eg: GET localhost:3000/users/one/email/jordan.benjamin@yourcompany.com
+
 router.get('/one/email/:email', auth, async (request, response) => {
+
   try {
     // Removed case sensitivity from query params
     const { email } = request.body;
