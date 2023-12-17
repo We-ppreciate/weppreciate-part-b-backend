@@ -3,6 +3,7 @@ const router = express.Router();
 const { Nomination } = require('../models/NominationModel');
 const { User } = require('../models/UserModel');
 const { logToFile } = require('../functions/logToFile');
+const auth = require('../functions/verifyToken');
 
 
 // /* REMOVE IF NOT BROKEN */
@@ -42,7 +43,7 @@ const errorSwtich = (err, response) => {
 
   // GET all nominations in db
   // eg GET localhost:3000/nominations/all/
-  router.get('/all', async (request, response) => {
+  router.get('/all', auth, async (request, response) => {
     try {
       const result = await Nomination.find({});
 
@@ -57,7 +58,7 @@ const errorSwtich = (err, response) => {
 
   // GET all nominations by recipient id
   // eg GET localhost:3000/nominations/all/recipient/5f2f8e3d2b8e9a0017b0e9f0
-  router.get('/all/recipient/:id', async (request, response) => {
+  router.get('/all/recipient/:id', auth, async (request, response) => {
     try {
       const { id } = request.params;
 
@@ -92,7 +93,7 @@ const errorSwtich = (err, response) => {
   // GET all nominations by nominator fullUser name or basicUser name
   // eg GET localhost:3000/nominations/all/nominator/name/ed/dogherty
 
-router.get('/all/nominator/:firstName/:lastName', async (request, response) => {
+router.get('/all/nominator/:firstName/:lastName', auth, async (request, response) => {
   const { firstName, lastName } = request.params;
 
   try {
@@ -142,7 +143,7 @@ router.get('/all/nominator/:firstName/:lastName', async (request, response) => {
 
   // GET one nomination by nominator id
   // eg GET localhost:3000/nominations/one/nominator/5f2f8e3d2b8e9a0017b0e9f0
-  router.get('/one/nominator/:id', async (request, response) => {
+  router.get('/one/nominator/:id', auth, async (request, response) => {
     try {
       const result = await Nomination.findOne({nominatorFullUser: request.params.id});
 
@@ -158,7 +159,7 @@ router.get('/all/nominator/:firstName/:lastName', async (request, response) => {
 
   // GET one nomination by recipient id
   // eg GET localhost:3000/nominations/one/recipient/5f2f8e3d2b8e9a0017b0e9f0
-  router.get('/one/recipient/:id', async (request, response) => {
+  router.get('/one/recipient/:id', auth, async (request, response) => {
     try {
       const result = await Nomination.findOne({recipientUser: request.params.id});
 
@@ -174,7 +175,7 @@ router.get('/all/nominator/:firstName/:lastName', async (request, response) => {
 
   // GET one nomination by nomination id
   // eg GET localhost:3000/nominations/one/nomination/5f2f8e3d2b8e9a0017b0e9f0
-  router.get('/one/nomination/:id', async (request, response) => {
+  router.get('/one/nomination/:id', auth, async (request, response) => {
     try {
       const result = await Nomination.findOne({_id: request.params.id});
 
@@ -190,7 +191,7 @@ router.get('/all/nominator/:firstName/:lastName', async (request, response) => {
 
   // GET all nominations by nominator id
   // eg GET localhost:3000/nominations/one/nominator/5f2f8e3d2b8e9a0017b0e9f0
-  router.get('/all/nominator/:id', async (request, response) => {
+  router.get('/all/nominator/:id', auth, async (request, response) => {
     try {
       const result = await Nomination.find({nominatorFullUser: request.params.id});
 
@@ -234,7 +235,7 @@ module.exports = router;
   //   "releaseDate": ,
   // }
 
-router.post('/new', async (request, response) => {
+router.post('/new', auth, async (request, response) => {
   try {
     const { recipientUser, nominatorFullUser } = request.body;
 
@@ -265,7 +266,7 @@ router.post('/new', async (request, response) => {
 // TODO Add authorisation
 // PATCH SnrMgr and Admin to promote from nomination to award
 // eg: PATCH localhost:3000/nominations/update/nom/5f2f8e3d2b8e9a0017b0e9f0
-router.patch('/update/nom/:id', async (request, response) => {
+router.patch('/update/nom/:id', auth, async (request, response) => {
   try {
     // creates object of keys from request body
     const updates = Object.keys(request.body);
@@ -309,7 +310,7 @@ router.patch('/update/nom/:id', async (request, response) => {
 
 // DELETE admin by id
 // eg DELETE localhost:3000/nominations/delete/5f2f8e3d2b8e9a0017b0e9f0
-router.delete('/delete/:id', async (request, response) => {
+router.delete('/delete/:id', auth, async (request, response) => {
   try {
     const result = await Nomination.findByIdAndDelete(request.params.id);
 

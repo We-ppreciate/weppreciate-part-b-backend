@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { User } = require('../models/UserModel');
 const { logToFile } = require('../functions/logToFile');
-// const { errorSwtich } = require('./ErrorController');
+const auth = require('../functions/verifyToken');
 
 
 /* === ERROR HANDLING === */
@@ -38,7 +38,8 @@ const errorSwtich = (err, response) => {
 
 // GET all users in db
 // eg GET localhost:3000/users/all/
-router.get('/all', async (request, response) => {
+router.get('/all', auth, async (request, response) => {
+  
   try {
     const result = await User.find({});
     
@@ -54,7 +55,7 @@ router.get('/all', async (request, response) => {
 
 // GET all FULL users in db
 // eg GET localhost:3000/users/all/fullusers
-router.get('/all/fullusers', async (request, response) => {
+router.get('/all/fullusers', auth, async (request, response) => {
   try {
     const result = await User.find({isFullUser: true});
     
@@ -70,7 +71,7 @@ router.get('/all/fullusers', async (request, response) => {
 
 // GET user by id
 // eg: GET localhost:3000/users/one/id/5e9b2b7b9b9b9b9b9b9b9b9b
-router.get('/one/id/:id', async (request, response) => {
+router.get('/one/id/:id', auth, async (request, response) => {
   try {
     const result = await User.findById(request.params.id);
     
@@ -85,7 +86,7 @@ router.get('/one/id/:id', async (request, response) => {
 
 // GET user by name
 // eg: GET localhost:3000/users/one/name/katie/lock
-router.get('/one/name/:firstName/:lastName', async (request, response) => {
+router.get('/one/name/:firstName/:lastName', auth, async (request, response) => {
   try {
     // Removed case sensitivity from query params
 
@@ -105,7 +106,7 @@ router.get('/one/name/:firstName/:lastName', async (request, response) => {
 
 // GET user regex, by name - not case sensitive
 // eg: GET localhost:3000/users/search/katie
-router.get('/search/:string', async (request, response) => {
+router.get('/search/:string', auth, async (request, response) => {
   try {
     const regex = new RegExp(request.params.string, 'i');
     const result = await User.find({ 
@@ -126,7 +127,7 @@ router.get('/search/:string', async (request, response) => {
 
 
 // GET user by Manager id
-router.get('/all/manager/:id', async (request, response) => {
+router.get('/all/manager/:id', auth, async (request, response) => {
   try {
     const result = await User.find({ lineManagerId: request.params.id} );
     
@@ -141,7 +142,7 @@ router.get('/all/manager/:id', async (request, response) => {
 
 // GET user by email
 // eg: GET localhost:3000/users/one/email/jordan.benjamin@yourcompany.com
-router.get('/one/email/:email', async (request, response) => {
+router.get('/one/email/:email', auth, async (request, response) => {
   try {
     // Removed case sensitivity from query params
     const { email } = request.body;
@@ -166,7 +167,7 @@ router.get('/one/email/:email', async (request, response) => {
 // POST new user
 // eg: POST http://localhost:3000/users/new
 /* ADD AUTHORISATION */
-router.post('/new', async (request, response) => {
+router.post('/new', auth, async (request, response) => {
   try {
     const newUser = new User(request.body);
     const result = await newUser.save();
@@ -186,7 +187,7 @@ router.post('/new', async (request, response) => {
 // PATCH user by id, for use by self
 // eg: PATCH localhost:3000/users/update/self/5e9b2b7b9b9b9b9b9b9b9b9b
 /* ADD AUTHORISATION */
-router.patch('/update/self/:id', async (request, response) => {
+router.patch('/update/self/:id', auth, async (request, response) => {
   try {
     // creates object of keys from request body
     const updates = Object.keys(request.body);
@@ -223,7 +224,7 @@ router.patch('/update/self/:id', async (request, response) => {
 // PATCH admin by id 
 // eg: PATCH localhost:3000/users/update/admin/5e9b2b7b9b9b9b9b9b9b9b9b
 /* ADD AUTHORISATION */
-router.patch('/update/admin/:id', async (request, response) => {
+router.patch('/update/admin/:id', auth, async (request, response) => {
   try {
     // creates object of keys from request body
     const updates = Object.keys(request.body);
@@ -263,7 +264,7 @@ router.patch('/update/admin/:id', async (request, response) => {
 // DELETE user by id, for admin use
 // eg: DELETE localhost:3000/admin/delete/5e9b2b7b9b9b9b9b9b9b9b9b
 /* ADD AUTHORISATION */
-router.delete('/delete/admin/:id', async (request, response) => {
+router.delete('/delete/admin/:id', auth, async (request, response) => {
   try {
     const result = await User.findByIdAndDelete(request.params.id);
     

@@ -6,17 +6,12 @@ const UserSchema = new mongoose.Schema({
     type: String,
     //TODO: Change required dependency after testing
     required: false,
-    // required: [true, 'UPN is missing.'],
     lowercase: true,
     trim: true
   },
   email: {
     type: String,
-    // TODO: Change required dependency after testing
-    required: false,
-    // required: [true, 'Email is missing.'],
-    unique: false,
-    // 
+    required: [true, 'Email is missing.'],
     unique: true,
     lowercase: true,
     trim: true
@@ -24,17 +19,13 @@ const UserSchema = new mongoose.Schema({
   name: {
     first: {
       type: String,
-      // TODO: Change required dependency after testing
-      required: false,
-      // required: [true, 'Name is missing.'],
+      required: [true, 'First name is missing.'],
       unique: false,
       trim: true,
     },
     last: {
       type: String,
-      // TODO: Change required dependency after testing
-      required: false,
-      // required: [true, 'Name is missing.'],
+      required: [true, 'Last name is missing.'],
       unique: false,
       trim: true,
     }
@@ -42,39 +33,30 @@ const UserSchema = new mongoose.Schema({
   },
   businessUnit: {
     type: String,
-    // TODO: Change required dependency after testing
     required: false,
-    // required: [true, 'Business Unit is missing.'],
     unique: false,
     trim: true
   },
   passwordHash: {
     type: String,
-    // TODO: Change required dependency after testing
     required: false,
-    // required: [true, 'Password is missing.'],
     unique: false,
     // prevents password being automatically returned
     select: false
   },
-  // TODO: Change this to ObjectId
   lineManagerId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: false,
     unique: false
   },
-  // TODO: Change this to match front end name/specifics
   userTagLine: {
     type: String,
     required: false,
     unique: false,
     trim: true
   },
-  // TODO: Insert other fields here
-  /* */
   // TODO: Link user's _id to photo on S3/Google Storage
-  
   userPhotoKey: {
     type: String,
     required: false,
@@ -82,30 +64,22 @@ const UserSchema = new mongoose.Schema({
   },
   isFullUser: {
     type: Boolean,
-    // TODO: Change required dependency after testing
-    required: false,
-    // required: true,
+    required: true,
     default: true
   },
   isLineManager: {
     type: Boolean,
-    // TODO: Change required dependency after testing
-    required: false,
-    // required: true,
+    required: true,
     default: false
   },
   isSeniorManager: {
     type: Boolean,
-    // TODO: Change required dependency after testing
-    required: false,
-    // required: true,
+    required: true,
     default: false
   },
   isAdmin: {
     type: Boolean,
-    // TODO: Change required dependency after testing
-    required: false,
-    // required: true,
+    required: true,
     default: false
   },
 });

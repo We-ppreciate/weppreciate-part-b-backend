@@ -11,8 +11,8 @@ const { User } = require('../models/UserModel');
 require('dotenv').config();
 
 let users = [];
-const JWT_SECRET = process.env.JWT_SECRET;
-const JWT_EXPIRATION = process.env.JWT_EXPIRATION;
+const jwtSecret = process.env.JWT_SECRET;
+const jwtExpiration = process.env.JWT_EXPIRATION;
 
 router.get('/user', async (request, response) => {
   try {
@@ -25,28 +25,8 @@ router.get('/user', async (request, response) => {
 
 /* === POST === */
 
-// router.post('/user', async (request, response) => {
-//   try {
-//     // Authenticate User
-//     const hashedPassword = await bcrypt.hash(request.body.password, 10);
-//     const user = {
-//       email: request.body.email, 
-//       password: hashedPassword
-//     };
-//     console.log(hashedPassword);
-//     users.push(user);
-//     response.status(201).send();
-//   } catch (err) {
-//     console.log(err);
-//     response.status(500).json({ error: 'Internal Server Error' })
-//     // errorSwitch(err, response);
-//   } finally {
-//     console.log(users);
-//   }
-
-// });
-
-
+// POST login
+// eg POST localhost:3000/auth/login
 router.post('/login', async (request, response) => {
   try {
     const user = await User.findOne({ email: request.body.email }).select('+passwordHash');
@@ -59,7 +39,7 @@ router.post('/login', async (request, response) => {
     
     if (isPasswordMatch) {
       // Generate JWT token
-      const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: JWT_EXPIRATION, algorithm: 'HS256' });
+      const token = jwt.sign({ userId: user._id }, jwtSecret, { expiresIn: jwtExpiration, algorithm: 'HS256' });
       
       // Send token in response
       response.json({ token });
