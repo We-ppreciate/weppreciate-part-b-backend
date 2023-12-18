@@ -31,7 +31,7 @@ router.get('/all/nomination/:id', async (request, response) => {
   } catch (err) {
     errorSwtich(err, response);
   }
-};
+});
 
 // GET one comment by id
 router.get('/one/:id', async (request, response) => {
