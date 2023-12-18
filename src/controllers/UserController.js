@@ -257,7 +257,7 @@ router.patch('/update/self/:id', auth, async (request, response) => {
 
     // if person does not exist, return error
     if (!updateSelf) {
-      return response.status(404).send({ error: 'Hmm. We can\'t find that person.' });
+      return response.status(404).send({ error: 'Hmm. We can\'t find that person. I\'ll check behind the couch' });
     }
 
     // otherwise... update
@@ -277,7 +277,7 @@ router.patch('/update/self/:id', auth, async (request, response) => {
 // eg: PATCH localhost:3000/users/update/admin/5e9b2b7b9b9b9b9b9b9b9b9b
 router.patch('/update/admin/:id', auth, async (request, response) => {
   const _id = request.userId;
-  
+
   try {
     const result = await User.findById(_id);
     // creates object of keys from request body
@@ -298,7 +298,7 @@ router.patch('/update/admin/:id', auth, async (request, response) => {
 
     // if person does not exist, return error
     if (!updateSelf) {
-      return response.status(404).send({ error: 'Hmm. We can\'t find that person.' });
+      return response.status(404).send({ error: 'Hmm. We can\'t find that person. I\'ll check behind the couch' });
     }
 
     // otherwise... update
