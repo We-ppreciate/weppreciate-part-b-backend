@@ -32,7 +32,6 @@ router.get('/user', async (request, response) => {
 router.post('/login', async (request, response) => {
   try {
     const user = await User.findOne({ email: request.body.email })
-
     .select('_id name email businessUnit lineManagerId userTagLine userPhotoKey isFullUser isLineManager isSeniorManager isAdmin +passwordHash'); // removed } .select('+passwordHash'
     
     if (!user) {

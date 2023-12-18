@@ -31,11 +31,16 @@ async function auth(request, response, next){
     request.user = verified;
     console.log('Verified:', verified);
 
+    // add user id to request, for route restrictions
+    request.userId = verified.userId;
+
     next();
   } catch(error) {
     response.status(400).send('Invalid token');
     console.log('Error:', error);
   }
 }
+
+
 
 module.exports = auth;
