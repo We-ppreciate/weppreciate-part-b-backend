@@ -32,7 +32,8 @@ router.get('/user', async (request, response) => {
 router.post('/login', async (request, response) => {
   try {
     const user = await User.findOne({ email: request.body.email })
-    .select('name email businessUnit lineManagerId userTagLine userPhotoKey isFullUser isLineManager isSeniorManager isAdmin +passwordHash'); // removed } .select('+passwordHash'
+
+    .select('_id name email businessUnit lineManagerId userTagLine userPhotoKey isFullUser isLineManager isSeniorManager isAdmin +passwordHash'); // removed } .select('+passwordHash'
     
     if (!user) {
       return response.status(400).send('User not found.');
@@ -45,7 +46,8 @@ router.post('/login', async (request, response) => {
       const token = jwt.sign({ userId: user._id }, jwtSecret, { expiresIn: jwtExpiration, algorithm: 'HS256' });
       
       // Send token in response
-      response.json({ 
+      response.json({
+        id: user._id, 
         name: user.name,
         email: user.email, 
         businessUnit: user.businessUnit,
