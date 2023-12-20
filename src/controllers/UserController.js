@@ -4,7 +4,7 @@ const { User } = require('../models/UserModel');
 const { logToFile } = require('../functions/logToFile');
 const auth = require('../functions/verifyToken');
 const { errorSwitch } = require('./ErrorController');
-const {validateNewUser, validateUpdateSelf, validateUpdateAdmin } = require('../../validations/UserValidation');
+const {validateNewUser, validateUpdateSelf, validateUpdateAdmin } = require('../validations/UserValidation');
 const _ = require('lodash');
 // const flat = require('flat'); Dynamic imports is new.
 
@@ -214,7 +214,7 @@ router.get('/one/email/:email', auth, async (request, response) => {
 // eg: POST http://localhost:3000/users/new
 
 const newUserSchema = router.post('/new', auth, async (request, response) => {
-  const {error, value } = validateNewUser(request.body);
+  const { error, value } = validateNewUser(request.body);
 
   if (error) {
     return response.status(400).send(error.details);
@@ -249,7 +249,7 @@ const newUserSchema = router.post('/new', auth, async (request, response) => {
 
 const updateSelfSchema = router.patch('/update/self/:id', auth, async (request, response) => {
   const _id = request.userId;
-  const {error, value } = validateUpdateSelf(request.body);
+  const { error, value } = validateUpdateSelf(request.body);
   if (error) {
     return response.status(400).send(error.details);
   }
@@ -285,7 +285,7 @@ const updateSelfSchema = router.patch('/update/self/:id', auth, async (request, 
 // eg: PATCH localhost:3000/users/update/admin/5e9b2b7b9b9b9b9b9b9b9b9b
 const updateAdminSchema = router.patch('/update/admin/:id', auth, async (request, response) => {
   const _id = request.userId;
-  const {error, value } = validateUpdateAdmin(request.body);
+  const { error, value } = validateUpdateAdmin(request.body);
   if (error) {
     return response.status(400).send(error.details);
   }
@@ -304,7 +304,8 @@ const updateAdminSchema = router.patch('/update/admin/:id', auth, async (request
     if (!requestor.isAdmin) {
       return response.status(400).send({ 
         status: response.statusCode,
-        error: 'Your admin has the access to update that. Please contact them, and buy them a coffee. They deserve it.' });
+        error: 'Your admin has the access to update that. Please contact them, and buy them a coffee. They deserve it.' 
+      });
     }
     
     // Assigning validated request.body to User document
