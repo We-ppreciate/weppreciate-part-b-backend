@@ -2,7 +2,6 @@
 .env
 /node_modules/*
 src/tests/
-.env
 
 .vscode/
 

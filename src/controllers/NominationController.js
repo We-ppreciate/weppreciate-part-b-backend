@@ -61,6 +61,7 @@ const errorSwtich = (err, response) => {
   // GET all nominations by recipient id
   // eg GET localhost:3000/nominations/all/recipient/5f2f8e3d2b8e9a0017b0e9f0
   router.get('/all/recipient/:id', auth, async (request, response) => {
+    
     try {
       const { id } = request.params;
 
@@ -78,23 +79,9 @@ const errorSwtich = (err, response) => {
     }
   });
 
-  /* WAS:
-  router.get('/all/recipient/:id', async (request, response) => {
-    try {
-      const result = await Nomination.find({recipientUser: request.params.id});
-
-      response.json({
-        Nominations: result
-      });
-    } catch (err) {
-      errorSwtich(err, response);
-    }
-  });
-  */
 
   // GET all nominations by nominator fullUser name or basicUser name
   // eg GET localhost:3000/nominations/all/nominator/name/ed/dogherty
-
 router.get('/all/nominator/:firstName/:lastName', auth, async (request, response) => {
   const { firstName, lastName } = request.params;
 
@@ -214,7 +201,6 @@ module.exports = router;
 
 // POST new nomination
 // eg: POST localhost:3000/nominations/new
-/* ADD AUTHORISATION */
 
   // JSON Template:
   // { 
@@ -267,7 +253,6 @@ router.post('/new', auth, async (request, response) => {
 /* === NOMINATION PATCH ROUTES === */
 
 
-// TODO Add authorisation
 // PATCH SnrMgr and Admin to promote from nomination to award
 // eg: PATCH localhost:3000/nominations/update/nom/5f2f8e3d2b8e9a0017b0e9f0
 router.patch('/update/nom/:id', auth, async (request, response) => {

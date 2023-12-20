@@ -24,7 +24,7 @@ const UserRouter = require('./controllers/UserController');
 const { Nomination } = require('./models/NominationModel');
 const NominationRouter = require('./controllers/NominationController');
 const AuthRouter = require('./controllers/AuthController');
-
+const CommentRouter = require('./controllers/CommentController');
 
 
 // root API response
@@ -38,7 +38,7 @@ app.get("/", (request, response) => {
 app.use('/auth', AuthRouter);
 app.use('/users', UserRouter);
 app.use('/nominations', NominationRouter);
-
+app.use('/comments', CommentRouter);
 
 
 // GET ALL OTHER ROUTES
