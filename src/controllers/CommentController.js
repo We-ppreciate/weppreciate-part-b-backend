@@ -4,7 +4,11 @@ require('dotenv').config();
 const { Nomination } = require('../models/NominationModel');
 const { User } = require('../models/UserModel');
 const { logToFile } = require('../functions/logToFile');
-const { errorSwtich } = require('./ErrorController');
+
+const { errorSwitch } = require('./ErrorController');
+const auth = require('../functions/verifyToken');
+const Comment = require('../models/CommentModel');
+
 
 
 /* === COMMENT GET ROUTES === */
@@ -14,12 +18,14 @@ const { errorSwtich } = require('./ErrorController');
 
 // GET all comments in db
 // eg GET localhost:3000/comments/all/
-router.get('/all', async (request, response) => {
+
+router.get('/all', auth, async (request, response) => {
   try {
     const result = await Comment.find();
     response.json(result);
   } catch (err) {
-    errorSwtich(err, response);
+    console.log(err)
+    errorSwitch(err, response);
   }
 });
 
@@ -29,7 +35,7 @@ router.get('/all/nomination/:id', async (request, response) => {
     const result = await Comment.find({ nominationId: request.params.id });
     response.json(result);
   } catch (err) {
-    errorSwtich(err, response);
+    errorSwitch(err, response);
   }
 });
 
@@ -39,7 +45,7 @@ router.get('/one/:id', async (request, response) => {
     const result = await Comment.findById(request.params.id);
     response.json(result);
   } catch (err) {
-    errorSwtich(err, response);
+    errorSwitch(err, response);
   }
 });
 
@@ -50,7 +56,7 @@ router.get('/all/user/:id', async (request, response) => {
     const result = await Comment.find({ commenterId: _id });
     response.json(result);
   } catch (err) {
-    errorSwtich(err, response);
+    errorSwitch(err, response);
   }
 });
 
@@ -59,28 +65,26 @@ router.get('/all/user/:id', async (request, response) => {
 
 
 // POST a comment on a nomination
-// router.post('/post/:id', auth, async (request, response) => {
-//   const _id = request.userId;
+router.post('/post/:id',auth, async (request, response) => {
+  const _id = request.userId;
 
-//   try {
-//     const result = await User.findById(_id);
-//     if (!result.isFullUser) {
-//       return response.status(403).send('You are not authorised to do that. Wash your mouth with soap.');
-//     }
+  try {
+    const result = await User.findById(_id);
+    if(!result.isFullUser) {
+      return response.status(403).send('You are not authorised to do that. Wash your mouth with soap.');
+    };
 
-//     const outcome = await Comment.create({
-//       nominationId: request.params.id,
-//       commenterId: _id,
-//       commentBody: request.body.commentBody
-//     });
+    const newComment = new Comment(request.body);
+    const outcome = await newComment.save();
     
-//     response.json({
-//       User: outcome
-//     });
-//   } catch (err) {
-//     errorSwtich(err, response);
-//   }
-// });
+    response.json({
+      User: outcome
+    });
+    
+  } catch (err) {
+    errorSwitch(err, response);
+  }
+});
 
 
 /* === COMMENT PUT ROUTES === */
@@ -117,6 +121,9 @@ router.delete('/delete/:id', async (request, response) => {
       User: outcome
     });
   } catch (err) {
-    errorSwtich(err, response);
+    errorSwitch(err, response);
   }
 });
+
+module.exports = router;
+

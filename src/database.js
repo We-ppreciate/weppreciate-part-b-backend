@@ -6,8 +6,6 @@ const { logToFile } = require('./functions/logToFile');
 
 async function databaseConnect(){
 	try {
-		// logToFile(`database.js: Connecting to: [login details]@${process.env.DB_PART_URI}`);
-		// console.log(`database.js: Connecting to: [login details]@${process.env.DB_PART_URI}`);
 
 		await mongoose.connect('mongodb+srv://weppreciate-admin:1ovF7VeKcBxVKyZW@weppreciate-intern.iqwpzfk.mongodb.net/?retryWrites=true&w=majority');
 

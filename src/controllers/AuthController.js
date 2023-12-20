@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const router = express.Router();
 const { errorSwitch } = require('./ErrorController');
@@ -7,12 +8,10 @@ const { errorSwitch } = require('./ErrorController');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models/UserModel');
+const auth = require('../functions/verifyToken');
 
-require('dotenv').config();
 
-let users = [];
 const jwtSecret = process.env.JWT_SECRET;
-const jwtExpiration = process.env.JWT_EXPIRATION;
 
 router.get('/user', async (request, response) => {
   try {
@@ -33,7 +32,7 @@ router.post('/login', async (request, response) => {
   try {
     const user = await User.findOne({ email: request.body.email })
 
-    .select('_id name email businessUnit lineManagerId userTagLine userPhotoKey isFullUser isLineManager isSeniorManager isAdmin +passwordHash'); // removed } .select('+passwordHash'
+    .select('_id name email businessUnit lineManagerId userTagLine userPhotoKey isFullUser isLineManager isSeniorManager isAdmin +passwordHash');
     
     if (!user) {
       return response.status(400).send('User not found.');
@@ -43,7 +42,7 @@ router.post('/login', async (request, response) => {
     
     if (isPasswordMatch) {
       // Generate JWT token
-      const token = jwt.sign({ userId: user._id }, jwtSecret, { expiresIn: jwtExpiration, algorithm: 'HS256' });
+      const token = jwt.sign({ userId: user._id }, jwtSecret, { expiresIn: '7d', algorithm: 'HS256' });
       
       // Send token in response
       response.json({
@@ -69,36 +68,44 @@ router.post('/login', async (request, response) => {
   }
 });
 
-/* WAS: 
-
-router.post('/login', async (request, response) => {
-  const user = await User.findOne({ email: request.body.email }).select('+passwordHash');
-  response.json({
-    User: user
-  });
-  console.log(User);
-  console.log(`pre-compare: ${user.passwordHash}`)
-  // change to basic user route
-  if (!user) {
-    return response.status(400).send('User not found.');
-  }
-  try {
-    let bodyPasswordHash = await bcrypt.hash(request.body.password, 10);
-    console.log(`body: ${bodyPasswordHash}; user: ${user.passwordHash}`);
-    const isPasswordMatch = await bcrypt.compare(bodyPasswordHash, user.passwordHash);
-    if (isPasswordMatch) {
-      response.send('Success');
-    } else {
-      response.status(400).send('Invalid credentials');
-    }
-  } catch(err) {
-    console.error(err);
-    response.status(500).json({ error: 'Internal Server Error' });
-  }
-
+// PATCH password reset
+// Required body fields: newPassword: string
+// eg PATCH localhost:3000/auth/reset
+router.patch('/reset/:id', auth, async (request, response) => {
+  const requestorId = request.userId;
+  const targetId = request.params.id;
+  const newPassword = request.body.newPassword;
   
-});
-*/
+  try {
+    const target = await User.findById(targetId);
+    const requestor = await User.findById(requestorId);
+    if (!target) {
+      return response.status(400).send(`User ${target} not found.`);
+    };
+    if (!requestor) {
+      return response.status(400).send(`User ${requestor} not found.`);
+    };
+    
+    console.log(`id: ${requestorId},\ntargetId: ${targetId},\nnewPassword: ${newPassword},\ntarget: ${target},\nrequestor: ${JSON.stringify(requestor)},\nisAdmin: ${requestor.isAdmin}.`);
 
+    if (typeof newPassword !== 'string') {
+      return response.status(400).send('Invalid password.');
+    }
+
+    if (requestorId == targetId || requestor.isAdmin) {
+      const saltRounds = 10;
+      const passwordHash = bcrypt.hashSync(newPassword, saltRounds);
+      target.passwordHash = passwordHash
+      await target.save();
+  
+      return response.status(200).send('Password reset successful. With great passwords come great responsibility.');
+    };
+
+    return response.status(403).send('You are not authorised to do that. Wash your mouth with soap.');
+
+  } catch (err) {
+    errorSwitch(err, response);
+  };
+});
 
 module.exports = router;
