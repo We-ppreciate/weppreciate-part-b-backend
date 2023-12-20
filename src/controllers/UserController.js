@@ -279,7 +279,6 @@ const updateSelfSchema = router.patch('/update/self/:id', auth, async (request, 
 });
 
 
-
 // TODO MAKE DRYER
 // PATCH admin by id 
 // Has authentication and authorisation = isAdmin must be true
