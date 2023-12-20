@@ -1,5 +1,5 @@
 const express = require('express');
-const { logToFile } = require('../src/functions/logToFile');
+const { logToFile } = require('../functions/logToFile');
 const Joi = require('joi');
 
 
