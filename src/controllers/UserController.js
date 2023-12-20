@@ -4,6 +4,10 @@ const { User } = require('../models/UserModel');
 const { logToFile } = require('../functions/logToFile');
 const auth = require('../functions/verifyToken');
 const { errorSwitch } = require('./ErrorController');
+const {validateNewUser, validateUpdateSelf, validateUpdateAdmin } = require('../../validations/UserValidation');
+const _ = require('lodash');
+// const flat = require('flat'); Dynamic imports is new.
+
 
 
 /* === ERROR HANDLING === */
@@ -209,7 +213,13 @@ router.get('/one/email/:email', auth, async (request, response) => {
 // Has authentication and authorisation = isAdmin must be true
 // eg: POST http://localhost:3000/users/new
 
-router.post('/new', auth, async (request, response) => {
+const newUserSchema = router.post('/new', auth, async (request, response) => {
+  const {error, value } = validateNewUser(request.body);
+
+  if (error) {
+    return response.status(400).send(error.details);
+  }
+
   const _id = request.userId;
 
   try {
@@ -236,74 +246,70 @@ router.post('/new', auth, async (request, response) => {
 // TODO MAKE DRYER
 // PATCH user by id, for use by self
 // eg: PATCH localhost:3000/users/update/self/5e9b2b7b9b9b9b9b9b9b9b9b
-/* NEEDS TESTING */
-router.patch('/update/self/:id', auth, async (request, response) => {
+
+const updateSelfSchema = router.patch('/update/self/:id', auth, async (request, response) => {
   const _id = request.userId;
+  const {error, value } = validateUpdateSelf(request.body);
+  if (error) {
+    return response.status(400).send(error.details);
+  }
+
+  const requestor = await User.findById(_id);
+  const target = await User.findById(request.params.id);
 
   try {
-    const requestor = await User.findById(_id);
-    const target = await User.findById(request.params.id);
-
-    // creates object of keys from request body
-    const updates = Object.keys(request.body);
-    // so as to limit update to only allowed updates: userTagLine
-    const userAllowedUpdates = ['userTagLine'];
-    // applies updated values to user object
-    const isValid = updates.every((update) => userAllowedUpdates.includes(update));
-    console.log(`updates: ${updates}, isValid: ${isValid}, requestor: ${requestor}, target: ${target}`)
-
-    // if trying to update a non-updatable field, trying to update a profile other than their own, or is not admin return error
-    if (!isValid || requestor.id !== target.id) {
-      return response.status(400).send({ error: 'Your intent is good but we can\'t update that.' });
-    }
-    // if person does not exist, return error
+    // Checking db for User document
     if (!target) {
       return response.status(404).send({ error: 'Hmm. We can\'t find that person. I\'ll check behind the couch' });
     }
+    // Checking requestor is only updating their own document
+    if (requestor.id !== target.id) {
+      return response.status(400).send({ error: 'You can only update your own details, you prankster, you.' });
+    }
 
-    // otherwise... update
-    updates.forEach((update) => target[update] = request.body[update]);
+    // Assigning validated request.body to User document
+    Object.assign(target, request.body);
     await target.save();
 
     response.send(target);
 
-  } catch (err) {
+  } catch {
     errorSwitch(err, response);
   }
 });
+
 
 
 // TODO MAKE DRYER
 // PATCH admin by id 
 // Has authentication and authorisation = isAdmin must be true
 // eg: PATCH localhost:3000/users/update/admin/5e9b2b7b9b9b9b9b9b9b9b9b
-router.patch('/update/admin/:id', auth, async (request, response) => {
+const updateAdminSchema = router.patch('/update/admin/:id', auth, async (request, response) => {
   const _id = request.userId;
+  const {error, value } = validateUpdateAdmin(request.body);
+  if (error) {
+    return response.status(400).send(error.details);
+  }
+
+  const requestor = await User.findById(_id);
+  const target = await User.findById(request.params.id);
 
   try {
-    const requestor = await User.findById(_id);
-    const target = await User.findById(request.params.id);
-
-    // creates object of keys from request body
-    const updates = Object.keys(request.body);
-    // so as to limit update to only allowed updates: userTagLine
-    const adminAllowedUpdates = ['email', 'name', 'businessUnit', 'lineManagerId', 'userPhotoKey', 'userTagLine', 'isFullUser', 'isLineManager', 'isSeniorManager', 'isAdmin'];
-
-    // checks update values in the request body against allowed updates
-    const isValid = updates.every((update) => adminAllowedUpdates.includes(update));
-
-    // if trying to update a non-updatable field, or is non-Admin return error
-    if (!requestor.isAdmin || !isValid) {
-      return response.status(400).send({ error: 'Your intent is good but there is something in there that we can\'t update.' });
-    }
-
-    // if person does not exist, return error
+    // Checking db for User document
     if (!target) {
-      return response.status(404).send({ error: 'Hmm. We can\'t find that person. I\'ll check behind the couch' });
+      return response.status(404).send({ 
+        status: response.statusCode,
+        error: 'Hmm. We can\'t find that person. I\'ll check behind the couch' });
     }
-
-    // otherwise... update
-    updates.forEach((update) => target[update] = request.body[update]);
+    // Check if user is non-Admin; return error
+    if (!requestor.isAdmin) {
+      return response.status(400).send({ 
+        status: response.statusCode,
+        error: 'Your admin has the access to update that. Please contact them, and buy them a coffee. They deserve it.' });
+    }
+    
+    // Assigning validated request.body to User document
+    Object.assign(target, request.body);
     await target.save();
 
     response.send(target);
