@@ -86,7 +86,8 @@ router.patch('/reset/:id', auth, async (request, response) => {
       return response.status(400).send(`User ${requestor} not found.`);
     };
     
-    console.log(`id: ${requestorId},\ntargetId: ${targetId},\nnewPassword: ${newPassword},\ntarget: ${target},\nrequestor: ${JSON.stringify(requestor)},\nisAdmin: ${requestor.isAdmin}.`);
+
+    // console.log(`id: ${requestorId},\ntargetId: ${targetId},\nnewPassword: ${newPassword},\ntarget: ${target},\nrequestor: ${JSON.stringify(requestor)},\nisAdmin: ${requestor.isAdmin}.`);
 
     if (typeof newPassword !== 'string') {
       return response.status(400).send('Invalid password.');

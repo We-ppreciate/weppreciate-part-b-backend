@@ -233,6 +233,7 @@ router.post('/new', auth, async (request, response) => {
 
 /* === USER PATCH ROUTES === */
 
+// TODO MAKE DRYER
 // PATCH user by id, for use by self
 // eg: PATCH localhost:3000/users/update/self/5e9b2b7b9b9b9b9b9b9b9b9b
 /* NEEDS TESTING */
@@ -240,32 +241,31 @@ router.patch('/update/self/:id', auth, async (request, response) => {
   const _id = request.userId;
 
   try {
-    const result = await User.findById(_id);
+    const requestor = await User.findById(_id);
+    const target = await User.findById(request.params.id);
+
     // creates object of keys from request body
     const updates = Object.keys(request.body);
     // so as to limit update to only allowed updates: userTagLine
-    const allowedUpdates = ['userTagLine'];
+    const userAllowedUpdates = ['userTagLine'];
     // applies updated values to user object
-    const isValid = updates.every((update) => allowedUpdates.includes(update));
+    const isValid = updates.every((update) => userAllowedUpdates.includes(update));
+    console.log(`updates: ${updates}, isValid: ${isValid}, requestor: ${requestor}, target: ${target}`)
 
     // if trying to update a non-updatable field, trying to update a profile other than their own, or is not admin return error
-  if (!isValid || request.params.id !== _id || !result.isAdmin) {
+    if (!isValid || requestor.id !== target.id) {
       return response.status(400).send({ error: 'Your intent is good but we can\'t update that.' });
     }
-
-    // otherwise... update
-    const updateSelf = await User.findById(request.params.id);
-
     // if person does not exist, return error
-    if (!updateSelf) {
+    if (!target) {
       return response.status(404).send({ error: 'Hmm. We can\'t find that person. I\'ll check behind the couch' });
     }
 
     // otherwise... update
-    updates.forEach((update) => updateSelf[update] = request.body[update]);
-    await updateSelf.save();
+    updates.forEach((update) => target[update] = request.body[update]);
+    await target.save();
 
-    response.send(updateSelf);
+    response.send(target);
 
   } catch (err) {
     errorSwitch(err, response);
@@ -273,6 +273,7 @@ router.patch('/update/self/:id', auth, async (request, response) => {
 });
 
 
+// TODO MAKE DRYER
 // PATCH admin by id 
 // Has authentication and authorisation = isAdmin must be true
 // eg: PATCH localhost:3000/users/update/admin/5e9b2b7b9b9b9b9b9b9b9b9b
@@ -280,33 +281,32 @@ router.patch('/update/admin/:id', auth, async (request, response) => {
   const _id = request.userId;
 
   try {
-    const result = await User.findById(_id);
+    const requestor = await User.findById(_id);
+    const target = await User.findById(request.params.id);
+
     // creates object of keys from request body
     const updates = Object.keys(request.body);
     // so as to limit update to only allowed updates: userTagLine
-    const allowedUpdates = ['email', 'name', 'businessUnit', 'lineManagerId', 'userPhotoKey', 'userTagLine', 'isFullUser', 'isLineManager', 'isSeniorManager', 'isAdmin'];
+    const adminAllowedUpdates = ['email', 'name', 'businessUnit', 'lineManagerId', 'userPhotoKey', 'userTagLine', 'isFullUser', 'isLineManager', 'isSeniorManager', 'isAdmin'];
 
-    // applies updated values to user object
-    const isValid = updates.every((update) => allowedUpdates.includes(update));
+    // checks update values in the request body against allowed updates
+    const isValid = updates.every((update) => adminAllowedUpdates.includes(update));
 
-    // if trying to update a non-updatable field, return error
-    if (!request.isAdmin || !isValid) {
+    // if trying to update a non-updatable field, or is non-Admin return error
+    if (!requestor.isAdmin || !isValid) {
       return response.status(400).send({ error: 'Your intent is good but there is something in there that we can\'t update.' });
     }
 
-    // otherwise... update
-    const updateSelf = await User.findById(request.params.id);
-
     // if person does not exist, return error
-    if (!updateSelf) {
+    if (!target) {
       return response.status(404).send({ error: 'Hmm. We can\'t find that person. I\'ll check behind the couch' });
     }
 
     // otherwise... update
-    updates.forEach((update) => updateSelf[update] = request.body[update]);
-    await updateSelf.save();
+    updates.forEach((update) => target[update] = request.body[update]);
+    await target.save();
 
-    response.send(updateSelf);
+    response.send(target);
 
   } catch (err) {
     errorSwitch(err, response);
