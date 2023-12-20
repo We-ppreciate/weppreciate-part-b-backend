@@ -13,6 +13,10 @@ const errorSwitch = (err, response) => {
       statusCode = 400;
       message = `Your intent is good but the request was bad. ${statusCode}, ${err.message}`;
       break;
+    case 401:
+      statusCode = 401;
+      message = `It looks like I'm missing your login credentials. Let's have another go. ${statusCode}, ${err.message}`;
+      break;
     case 403:
       statusCode = 403;
       message = `You are not authorised to do that. We'pologise. ${statusCode}, ${err.message}`;
