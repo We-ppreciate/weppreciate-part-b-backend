@@ -4,9 +4,11 @@ require('dotenv').config();
 const { Nomination } = require('../models/NominationModel');
 const { User } = require('../models/UserModel');
 const { logToFile } = require('../functions/logToFile');
+
 const { errorSwitch } = require('./ErrorController');
 const auth = require('../functions/verifyToken');
 const Comment = require('../models/CommentModel');
+
 
 
 /* === COMMENT GET ROUTES === */
@@ -16,6 +18,7 @@ const Comment = require('../models/CommentModel');
 
 // GET all comments in db
 // eg GET localhost:3000/comments/all/
+
 router.get('/all', auth, async (request, response) => {
   try {
     const result = await Comment.find();
@@ -123,3 +126,4 @@ router.delete('/delete/:id', async (request, response) => {
 });
 
 module.exports = router;
+
