@@ -19,9 +19,7 @@ app.use(express.json());
 // ====================
 
 const { logToFile } = require('./functions/logToFile');
-const { User } = require('./models/UserModel');
 const UserRouter = require('./controllers/UserController');
-const { Nomination } = require('./models/NominationModel');
 const NominationRouter = require('./controllers/NominationController');
 const AuthRouter = require('./controllers/AuthController');
 const CommentRouter = require('./controllers/CommentController');
@@ -43,11 +41,9 @@ app.use('/comments', CommentRouter);
 
 // GET ALL OTHER ROUTES
 app.get('*', (request, response) => {
-	response.json({
-		message: 'This is not the page you are looking for.'
+	response.status(404).json({
+		error: 'This is not the page you are looking for.'
 	});
-	logToFile(`server.js: 404. ${request.url}`);
-	console.log(`server.js: 404. ${request.url}`);
 });
 
 module.exports = {

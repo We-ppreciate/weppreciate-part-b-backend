@@ -25,14 +25,14 @@ schema.validate(payload, {abortEarly: false });
     isNominationInstant: Joi.boolean().required().default(false),
     isAward: Joi.boolean().required().default(false),
     isReleased: Joi.boolean().required().default(false),
-    releaseDate: Joi.date().format('D-MM-YYYY').allow(null).optional(),
+    releaseDate: Joi.string().pattern(new RegExp('^[0-9]{2}-[0-9]{2}-[0-9]{4}$')).allow(null, ''),
   });
 
   const updateNominationSchema = Joi.object({
     nominationId: Joi.string().trim().required(),
     isAward: Joi.boolean().optional().default(false),
     isReleased: Joi.boolean().optional().default(false),
-    releaseDate: Joi.date().optional(),
+    releaseDate: Joi.string().pattern(new RegExp('^[0-9]{2}-[0-9]{2}-[0-9]{4}$')).allow(null, ''),
   });
 
   const validateNewNomination = validator(newNominationSchema);

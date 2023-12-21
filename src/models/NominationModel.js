@@ -47,26 +47,7 @@ const NominationSchema = new mongoose.Schema({
       // Nomination date - default to submitted date
       nominationDate: {
         type: String,
-        default: () => {
-          const date = new Date();
-          const aestTime = new Date(date.toLocaleString('en-US', { timeZone: 'Australia/Sydney' }));
-        
-          const day = String(aestTime.getUTCDate()).padStart(2, '0');
-          const month = String(aestTime.getUTCMonth() + 1).padStart(2, '0'); // January is 0!
-          const year = aestTime.getUTCFullYear();
-        
-          return `${day}-${month}-${year}`;
-        },
         required: true,
-        validate: {
-          validator: function (value) {
-            // Regex to validate date format (dd-mm-yyyy)
-            const regex = /^(0[1-9]|1\d|2\d|3[01])-(0[1-9]|1[0-2])-(19|20)\d{2}$/;
-            return regex.test(value) || value === '' || value === null || value === undefined;
-            
-          },
-          message: 'Invalid date format. Date should be in dd-mm-yyyy format.'
-        }
       },
       // Boolean on whether the nominator is a full user - determines requirements for nominatorEmail and nominatorName
       isNominatorFullUser: {
@@ -94,27 +75,7 @@ const NominationSchema = new mongoose.Schema({
     // Date award is released
     releaseDate: {
       type: String,
-      default: () => {
-        const date = new Date().toLocaleString('en-AU', {
-          timeZone: 'Australia/Sydney',
-          dateStyle: 'short'
-        });
-        return date;
-      },
       required: false,
-      validate: {
-        validator: function (value) {
-          // If the value is null, validation should pass
-          if (value === null) {
-            return true;
-          }
-        
-          // Regex to validate date format (dd-mm-yyyy)
-          const regex = /^(0[1-9]|1\d|2\d|3[01])-(0[1-9]|1[0-2])-(19|20)\d{2}$/;
-          return regex.test(value);
-        },
-        message: 'Invalid date format. Date should be null or in dd-mm-yyyy format.'
-      }
     },
 });
 
