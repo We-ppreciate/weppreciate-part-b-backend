@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const { Nomination } = require('../models/NominationModel');
 const { User } = require('../models/UserModel');
-const { logToFile } = require('../functions/logToFile');
 
 const auth = require('../functions/verifyToken');
 const { validateNewNomination, validateUpdateNomination } = require('../validations/NominationValidation');
@@ -90,13 +89,29 @@ const { errorSwitch } = require('./ErrorController');
   });
 
 
-  // TODO GET all released nominations
-
-
-  // TODO GET all unreleased nominations
-
-
-  // TODO GET all instant nominations
+  // GET 20 nominations at a time with pagenation
+  // eg GET localhost:3000/nominations/page/1
+  router.get('/page/:page', auth, async (request, response) => {
+    // sets the variable that determines the number of documents to skip, base 10
+    const page = parseInt(request.params.page, 10);
+    const limit = 20;
+    const skip = (page - 1) * limit;
+  
+    try {
+      const nominations = await Nomination.find()
+      // descending order by date of nomination submission
+      .sort({ nominationDate: -1 })
+      // skips 20 * (page - 1) documents
+      .skip(skip)
+      // limits returned json to 20 documents
+      .limit(limit);
+      response.json({
+        Nominations: nominations
+      });
+    } catch (err) {
+      errorSwitch(err, response);
+    }
+  });
 
 
   // GET one nomination by nominator id
@@ -172,24 +187,24 @@ const { errorSwitch } = require('./ErrorController');
 
 // JSON Template:
 // { 
-  //   "recipientUser": ,
-  //   "nominatorFullUser": ,
-  //   "nominatorBasicUser": {
-    //     "basicName": {
-      //       "first": ,
-      //       "last": ,
-      //     },
-      //     "basicEmail": ,
-      //   },
-      //   "nominationValue": ,
-      //   "nominationBody": ,
-      //   "nominationDate": ,
-      //   "isNominatorFullUser": ,
-      //   "isNominationInstant": ,
-      //   "isAward": ,
-      //   "isReleased": ,
-      //   "releaseDate": ,
-      // }
+//     "recipientUser": ,
+//     "nominatorFullUser": ,
+//     "nominatorBasicUser": {
+//         "basicName": {
+//             "first": ,
+//             "last": ,
+//           },
+//           "basicEmail": ,
+//         },
+//         "nominationValue": ,
+//         "nominationBody": ,
+//         "nominationDate": ,
+//         "isNominatorFullUser": ,
+//         "isNominationInstant": ,
+//         "isAward": ,
+//         "isReleased": ,
+//         "releaseDate": ,
+//       }
       
 // eg: POST localhost:3000/nominations/new
 router.post('/new', auth, async (request, response) => {
