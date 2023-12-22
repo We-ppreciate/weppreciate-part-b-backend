@@ -205,6 +205,7 @@ const { errorSwitch } = require('./ErrorController');
 //         "isReleased": ,
 //         "releaseDate": ,
 //       }
+
       
 // eg: POST localhost:3000/nominations/new
 router.post('/new', auth, async (request, response) => {
