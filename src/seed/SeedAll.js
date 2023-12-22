@@ -13,7 +13,7 @@ const jwt = require('jsonwebtoken');
 
 
 
-/* === Password Hashes === */
+/* === Password Hashes for original seedingh === */
 
 let passwords = [
   {
@@ -23,27 +23,37 @@ let passwords = [
   },
   {
     email: 'ed.dougherty@yourcompany.com',
-    password: 'password234',
+    password: 'password',
     passwordHash: null
   },
   {
-    email: 'Hannah.Sallows@yourcompany.com',
-    password: 'password456',
+    email: 'hannah.sallows@yourcompany.com',
+    password: 'password',
     passwordHash: null
   },
   {
-    email: 'Katie.Lock@yourcompany.com',
-    password: 'password678',
+    email: 'katie.lock@yourcompany.com',
+    password: 'password',
     passwordHash: null
   },
   {
-    email: 'Alex.Greatbeard@yourcompany.com',
-    password: 'password789',
+    email: 'alex.greatbeard@yourcompany.com',
+    password: 'password',
     passwordHash: null
   },
   {
-    email: 'Carolina.Reaper@yourcompany.com',
-    password: 'password890',
+    email: 'carolina.reaper@yourcompany.com',
+    password: 'password',
+    passwordHash: null
+  },
+  {
+    email: 'sally.superstar@yourcompany.com',
+    password: 'password',
+    passwordHash: null
+  },
+  {
+    email: 'jo.newtown@yourcompany.com',
+    password: 'password',
     passwordHash: null
   }
 ]
@@ -75,6 +85,8 @@ databaseConnect().then(async () => {
 
 
   /* === USER SEED DATA === */
+
+
   // {
   //   _id: objectId,
   //   name: {
@@ -242,19 +254,18 @@ databaseConnect().then(async () => {
   alexGreatbeard.upn = alexGreatbeard.email.split('@')[0];
 
   await alexGreatbeard.save().then(() => {
-    logToFile(`seed.js: ${alexGreatbeard.name} saved, with id ${alexGreatbeard._id}\n${alexGreatbeard}`);
     console.log(`seed.js: ${alexGreatbeard.name} saved, with id ${alexGreatbeard._id}\n${alexGreatbeard}`);
   });
 
   const carolinaReaper = new User({
     _id: new mongoose.Types.ObjectId(),
     name: {
-      first: 'Carolina',
-      last: 'Reaper'
+      first: 'carolina',
+      last: 'reaper'
     },
-    email: 'Carolina.Reaper@yourcompany.com',
+    email: 'carolina.reaper@yourcompany.com',
     businessUnit: 'Business Services',
-    passwordHash: passwords.find(obj => obj.email === 'Carolina.Reaper@yourcompany.com').passwordHash,
+    passwordHash: passwords.find(obj => obj.email === 'carolina.reaper@yourcompany.com').passwordHash,
     lineManagerId: null,
     userTagLine: 'It\'s a bit chilly in here',
     userPhotoKey: 'replacewithURL',
@@ -267,27 +278,107 @@ databaseConnect().then(async () => {
   carolinaReaper.upn = carolinaReaper.email.split('@')[0];
 
   await carolinaReaper.save().then(() => {
-    logToFile(`seed.js: ${carolinaReaper.name} saved, with id ${carolinaReaper._id}\n${carolinaReaper}`);
     console.log(`seed.js: ${carolinaReaper.name} saved, with id ${carolinaReaper._id}\n${carolinaReaper}`);
   });
 
-  // Update line manager details
+
+const sallySuperstar = new User({
+  _id: new mongoose.Types.ObjectId(),
+  name: {
+    first: 'Sally',
+    last: 'Superstar'
+  },
+  email: 'sally.superstar@yourcompany.com',
+  businessUnit: 'Business Services',
+  passwordHash: passwords.find(obj => obj.email === 'sally.superstar@yourcompany.com').passwordHash,
+  lineManagerId: null,
+  userTagLine: 'I aim for a little better than average',
+  userPhotoKey: 'https://storage.googleapis.com/weppreciate-store/profile/00080-1412353387.png',
+  isFullUser: true,
+  isLineManager: false,
+  isSeniorManager: false,
+  isAdmin: false,
+});
+
+sallySuperstar.upn = sallySuperstar.email.split('@')[0];
+
+await sallySuperstar.save().then(() => {
+  console.log(`seed.js: ${sallySuperstar.name} saved, with id ${sallySuperstar._id}\n${sallySuperstar}`);
+});
+
+const joNewtown = new User({
+  _id: new mongoose.Types.ObjectId(),
+  name: {
+    first: 'Jo',
+    last: 'Newton'
+  },
+  email: 'jo.newton@yourcompany.com',
+  businessUnit: 'Business Services',
+  passwordHash: passwords.find(obj => obj.email === 'jo.newton@yourcompany.com').passwordHash,
+  lineManagerId: null,
+  userTagLine: 'Motion is not negotiable',
+  userPhotoKey: 'https://storage.googleapis.com/weppreciate-store/profile/00026-2935013661.png',
+  isFullUser: true,
+  isLineManager: true,
+  isSeniorManager: false,
+  isAdmin: true,
+});
+
+joNewtown.upn = joNewtown.email.split('@')[0];
+
+await joNewtown.save().then(() => {
+  console.log(`seed.js: ${joNewtown.name} saved, with id ${joNewtown._id}\n${joNewtown}`);
+});
+
+const jeevanNg = new User({
+  _id: new mongoose.Types.ObjectId(),
+  name: {
+    first: 'Jeevan',
+    last: 'Ng'
+  },
+  email: 'jeevan.ng@yourcompany.com',
+  businessUnit: 'Business Services',
+  passwordHash: passwords.find(obj => obj.email === 'jo.newton@yourcompany.com').passwordHash,
+  lineManagerId: null,
+  userTagLine: 'Success is the culmination of effort.',
+  userPhotoKey: 'https://storage.googleapis.com/weppreciate-store/profile/00048-1555748969.png',
+  isFullUser: true,
+  isLineManager: true,
+  isSeniorManager: false,
+  isAdmin: true,
+});
+
+joNewtown.upn = joNewtown.email.split('@')[0];
+
+await joNewtown.save().then(() => {
+  console.log(`seed.js: ${joNewtown.name} saved, with id ${joNewtown._id}\n${joNewtown}`);
+});
+
+
+
+  // Update line manager details separarely as user must exist before reference is created
+  // Updating individually to mitigate issues with any potential errors
   try {
     await User.findOneAndUpdate({ _id: natePicone._id }, { lineManagerId: edDougherty._id }, { new: true });
-    logToFile(`seed.js: ${natePicone.name} updated, with line manager`);
     console.log(`seed.js: ${natePicone.name} updated, with line manager`);
     
     await User.findOneAndUpdate({ _id: edDougherty._id }, { lineManagerId: hannahSallows._id }, { new: true });
-    logToFile(`seed.js: ${edDougherty.name} updated, with line manager`);
     console.log(`seed.js: ${edDougherty.name} updated, with line manager`);
 
     await User.findOneAndUpdate({ _id: alexGreatbeard._id }, { lineManagerId: hannahSallows._id }, { new: true });
-    logToFile(`seed.js: ${alexGreatbeard.name} updated, with line manager`);
     console.log(`seed.js: ${alexGreatbeard.name} updated, with line manager`);
 
     await User.findOneAndUpdate({ _id: hannahSallows._id }, { lineManagerId: carolinaReaper._id }, { new: true });
-    logToFile(`seed.js: ${carolinaReaper.name} updated, with line manager`);
+    console.log(`seed.js: ${hannahSallows.name} updated, with line manager`);
+
+    await User.findOneAndUpdate({ _id: sallySuperstar._id }, { lineManagerId: carolinaReaper._id }, { new: true });
+    console.log(`seed.js: ${sallySuperstar.name} updated, with line manager`);
+
+    await User.findOneAndUpdate({ _id: carolinaReaper._id }, { lineManagerId: joNewton._id }, { new: true });
     console.log(`seed.js: ${carolinaReaper.name} updated, with line manager`);
+
+    await User.findOneAndUpdate({ _id: jeevanNg._id }, { lineManagerId: edDougherty._id }, { new: true });
+    console.log(`seed.js: ${jeevanNg.name} updated, with line manager`);
 
 
   } catch (error) {
@@ -295,6 +386,68 @@ databaseConnect().then(async () => {
     console.log(`seed.js: ${error}`);
   } 
   
+
+    /* FULL CATEGORY SEED DATA */
+  
+  
+    const awardCategories = ['Say/Do', 'Commitment', 'Collborate', 'Challenging', 'Learning', 'Spirited'];
+  
+    const sayDo = new Category({
+      categoryName: awardCategories[0],
+      categoryDescription: 'Doing what you say',
+      championAnimal: 'cat',
+      categoryImage: 'https://storage.googleapis.com/weppreciate-store/award/anima_cat.png'
+    });
+    
+    const commitment = new Category({
+      categoryName: awardCategories[1],
+      categoryDescription: 'Having the commitment to follow through',
+      championAnimal: 'cat',
+      categoryImage: 'https://storage.googleapis.com/weppreciate-store/award/anima_cat.png'
+    });
+    
+    const collaborate = new Category({
+      categoryName: awardCategories[2],
+      categoryDescription: 'Collaborating like a boss',
+      championAnimal: 'cat',
+      categoryImage: 'https://storage.googleapis.com/weppreciate-store/award/anima_cat.png'
+    });
+    
+    const Challenging = new Category({
+      categoryName: awardCategories[3],
+      categoryDescription: 'Challenging all the things',
+      championAnimal: 'cat',
+      categoryImage: 'https://storage.googleapis.com/weppreciate-store/award/anima_cat.png'
+    });
+    
+    const learning = new Category({
+      categoryName: awardCategories[4],
+      categoryDescription: 'Learning all the time',
+      championAnimal: 'cat',
+      categoryImage: 'https://storage.googleapis.com/weppreciate-store/award/anima_cat.png'
+    });
+    
+    const spirited = new Category({
+      categoryName: awardCategories[5],
+      categoryDescription: 'Fire spirit',
+      championAnimal: 'cat',
+      categoryImage: 'https://storage.googleapis.com/weppreciate-store/award/anima_cat.png'
+    });
+    
+    const instant = new Category({
+      categoryName: awardCategories[6],
+      categoryDescription: 'Instant thanks',
+      championAnimal: 'cat',
+      categoryImage: 'https://storage.googleapis.com/weppreciate-store/award/anima_cat.png'
+    });
+    
+    await Category.insertMany([sayDo, commitment, collaborate, Challenging, learning, spirited, instant]).catch(error => {
+      logToFile(`seed.js: ${error}`);
+      console.log(`seed.js: ${error}`);
+    })
+  
+
+
 
   /* NOMINATION SEED DATA */
 
@@ -409,66 +562,8 @@ databaseConnect().then(async () => {
   /* TO DO: COMMENT SEED DATA */
 
   
-  /* FULL CATEGORY SEED DATA */
-  
-  
-  const awardCategories = ['Say/Do', 'Commitment', 'Collborate', 'Challenging', 'Learning', 'Spirited'];
-  
-  const sayDo = new Category({
-    categoryName: awardCategories[0],
-    categoryDescription: 'Doing what you say',
-    championAnimal: 'cat',
-    categoryImage: 'https://storage.googleapis.com/weppreciate-store/award/anima_cat.png'
-  });
-  
-  const commitment = new Category({
-    categoryName: awardCategories[1],
-    categoryDescription: 'Having the commitment to follow through',
-    championAnimal: 'cat',
-    categoryImage: 'https://storage.googleapis.com/weppreciate-store/award/anima_cat.png'
-  });
-  
-  const collaborate = new Category({
-    categoryName: awardCategories[2],
-    categoryDescription: 'Collaborating like a boss',
-    championAnimal: 'cat',
-    categoryImage: 'https://storage.googleapis.com/weppreciate-store/award/anima_cat.png'
-  });
-  
-  const Challenging = new Category({
-    categoryName: awardCategories[3],
-    categoryDescription: 'Challenging all the things',
-    championAnimal: 'cat',
-    categoryImage: 'https://storage.googleapis.com/weppreciate-store/award/anima_cat.png'
-  });
-  
-  const learning = new Category({
-    categoryName: awardCategories[4],
-    categoryDescription: 'Learning all the time',
-    championAnimal: 'cat',
-    categoryImage: 'https://storage.googleapis.com/weppreciate-store/award/anima_cat.png'
-  });
-  
-  const spirited = new Category({
-    categoryName: awardCategories[5],
-    categoryDescription: 'Fire spirit',
-    championAnimal: 'cat',
-    categoryImage: 'https://storage.googleapis.com/weppreciate-store/award/anima_cat.png'
-  });
-  
-  const instant = new Category({
-    categoryName: awardCategories[6],
-    categoryDescription: 'Instant thanks',
-    championAnimal: 'cat',
-    categoryImage: 'https://storage.googleapis.com/weppreciate-store/award/anima_cat.png'
-  });
-  
-  await Category.insertMany([sayDo, commitment, collaborate, Challenging, learning, spirited, instant]).catch(error => {
-    logToFile(`seed.js: ${error}`);
-    console.log(`seed.js: ${error}`);
-  })
 
 
   databaseClose();
-
+  
 });

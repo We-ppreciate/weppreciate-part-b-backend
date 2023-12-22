@@ -5,8 +5,7 @@ const { logToFile } = require('../functions/logToFile');
 const auth = require('../functions/verifyToken');
 const { errorSwitch } = require('./ErrorController');
 const {validateNewUser, validateUpdateSelf, validateUpdateAdmin } = require('../validations/UserValidation');
-const _ = require('lodash');
-// const flat = require('flat'); Dynamic imports is new.
+// const _ = require('lodash');
 
 
 
@@ -20,11 +19,12 @@ router.get('/all', auth, async (request, response) => {
   const _id = request.userId;
 
   try {
+    // `result` is the user document of the requestor, included here to test result.isAdmin conditional
     const result = await User.findById(_id);
     const resultAll = await User.find();
     
     if (!result) {
-      return response.status(400).send('User does not exist.');
+      return response.status(404).send({ error: 'Hmm. We can\'t find that person. I\'ll check behind the couch' });
     }
 
     if (result.isAdmin) {
@@ -141,7 +141,7 @@ router.get('/all/manager/:id', auth, async (request, response) => {
     const outcome = await User.find({ lineManagerId: request.params.id} );
     
     if (!result.isLineManager && !result.isSeniorManager && !result.isAdmin) {
-      return response.status(400).send('You are not authorised to see this. Close your eyes and walk away.');
+      return response.status(403).send('You are not authorised to see this. Close your eyes and walk away.');
     }
     
     response.json({
@@ -273,7 +273,7 @@ const updateAdminSchema = router.patch('/update/admin/:id', auth, async (request
     }
     // Check if user is non-Admin; return error
     if (!requestor.isAdmin) {
-      return response.status(400).send({ 
+      return response.status(403).send({ 
         status: response.statusCode,
         error: 'Your admin has the access to update that. Please contact them, and buy them a coffee. They deserve it.' 
       });

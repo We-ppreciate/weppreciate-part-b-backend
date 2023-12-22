@@ -14,6 +14,7 @@ const { errorSwitch } = require('./ErrorController');
   // GET all nominations in db
   // eg GET localhost:3000/nominations/all/
   router.get('/all', auth, async (request, response) => {
+    // find and return all nominations
     try {
       const result = await Nomination.find({});
 
@@ -29,13 +30,13 @@ const { errorSwitch } = require('./ErrorController');
   // GET all nominations by recipient id
   // eg GET localhost:3000/nominations/all/recipient/5f2f8e3d2b8e9a0017b0e9f0
   router.get('/all/recipient/:id', auth, async (request, response) => {
-    
+    const { id } = request.params;
     try {
-      const { id } = request.params;
-
+      // if id not found
       if (!id) {
         return response.status(400).send({ error: 'ID not provided.' });
       }
+      // ... otherwise return
       const result = await Nomination.find({recipientUser: id});
 
       response.json({
@@ -50,43 +51,43 @@ const { errorSwitch } = require('./ErrorController');
 
   // GET all nominations by nominator fullUser name or basicUser name
   // eg GET localhost:3000/nominations/all/nominator/name/ed/dogherty
-router.get('/all/nominator/:firstName/:lastName', auth, async (request, response) => {
-  const { firstName, lastName } = request.params;
+  router.get('/all/nominator/:firstName/:lastName', auth, async (request, response) => {
+    const { firstName, lastName } = request.params;
 
-  try {
-    // Find the user with matching first and last name
-    const user = await User.findOne({ 
-      'name.first': { $regex: new RegExp(`^${firstName}$`, 'i') }, 
-      'name.last': {$regex: new RegExp(`^${lastName}$`, 'i') } 
-    });
-  
-    // Find nominations where the user is the nominator
-    let result = [];
-  
-    if (!user) {
-      result = await Nomination.find({
-        'nominatorBasicUser.basicName.first': { $regex: new RegExp(`^${firstName}$`, 'i') }, 
-        'nominatorBasicUser.basicName.last': {$regex: new RegExp(`^${lastName}$`, 'i') } 
+    try {
+      // Find the full user with matching first and last name, case insensitive
+      const user = await User.findOne({ 
+        'name.first': { $regex: new RegExp(`^${firstName}$`, 'i') }, 
+        'name.last': {$regex: new RegExp(`^${lastName}$`, 'i') } 
       });
-    } else {
-      result = await Nomination.find({
-        $or: [
-          { nominatorFullUser: user.id },
-          {
-            'nominatorBasicUser.basicName.first': { $regex: new RegExp(`^${firstName}$`, 'i') },
-            'nominatorBasicUser.basicName.last': {$regex: new RegExp(`^${lastName}$`, 'i') } 
-          }
-        ]
-      })
-    };
-  
-    response.json({
-      Nominations: result
-    });
-  } catch (err) {
-    errorSwitch(err, response);
-  }
-});
+    
+      let result = [];
+      
+
+      if (!user) {
+        result = await Nomination.find({
+          'nominatorBasicUser.basicName.first': { $regex: new RegExp(`^${firstName}$`, 'i') }, 
+          'nominatorBasicUser.basicName.last': {$regex: new RegExp(`^${lastName}$`, 'i') } 
+        });
+      } else {
+        result = await Nomination.find({
+          $or: [
+            { nominatorFullUser: user.id },
+            {
+              'nominatorBasicUser.basicName.first': { $regex: new RegExp(`^${firstName}$`, 'i') },
+              'nominatorBasicUser.basicName.last': {$regex: new RegExp(`^${lastName}$`, 'i') } 
+            }
+          ]
+        })
+      };
+    
+      response.json({
+        Nominations: result
+      });
+    } catch (err) {
+      errorSwitch(err, response);
+    }
+  });
 
 
   // TODO GET all released nominations
@@ -161,37 +162,36 @@ router.get('/all/nominator/:firstName/:lastName', auth, async (request, response
     }
   });
 
-module.exports = router;
+  // module.exports = router;
 
 
 /* === NOMINATION POST ROUTES === */
 
 
 // POST new nomination
-// eg: POST localhost:3000/nominations/new
 
-  // JSON Template:
-  // { 
+// JSON Template:
+// { 
   //   "recipientUser": ,
   //   "nominatorFullUser": ,
   //   "nominatorBasicUser": {
-  //     "basicName": {
-  //       "first": ,
-  //       "last": ,
-  //     },
-  //     "basicEmail": ,
-  //   },
-  //   "nominationValue": ,
-  //   "nominationBody": ,
-  //   "nominationDate": ,
-  //   "isNominatorFullUser": ,
-  //   "isNominationInstant": ,
-  //   "isAward": ,
-  //   "isReleased": ,
-  //   "releaseDate": ,
-  // }
-
-
+    //     "basicName": {
+      //       "first": ,
+      //       "last": ,
+      //     },
+      //     "basicEmail": ,
+      //   },
+      //   "nominationValue": ,
+      //   "nominationBody": ,
+      //   "nominationDate": ,
+      //   "isNominatorFullUser": ,
+      //   "isNominationInstant": ,
+      //   "isAward": ,
+      //   "isReleased": ,
+      //   "releaseDate": ,
+      // }
+      
+// eg: POST localhost:3000/nominations/new
 router.post('/new', auth, async (request, response) => {
   const { error, value } = validateNewNomination(request.body);
 
@@ -257,7 +257,7 @@ router.patch('/update/nom/:id', auth, async (request, response) => {
     console.log(`admin: ${requestor.isAdmin}, snrMgr: ${requestor.isSeniorManager}`);
 
     if (!requestor.isSeniorManager && !requestor.isAdmin) {
-      return response.status(400).send({ 
+      return response.status(403).send({ 
         status: response.statusCode,
         error: 'Your admin or senior manager has the access to update that. Please contact them, and buy them a coffee. They deserve it.' 
       });
@@ -282,12 +282,25 @@ router.patch('/update/nom/:id', auth, async (request, response) => {
 // eg DELETE localhost:3000/nominations/delete/5f2f8e3d2b8e9a0017b0e9f0
 router.delete('/delete/:id', auth, async (request, response) => {
   try {
+    const requestor = await User.findById(_id);
+    
+    if (!requestor.isAdmin) {
+      return response.status(403).send({ 
+        status: response.statusCode,
+        error: 'Your admin has the access to update that. Please contact them, and buy them a coffee. They deserve it.' 
+      });
+    };
+    
     const result = await Nomination.findByIdAndDelete(request.params.id);
-
+    
     if (!result) {
-      return response.status(404).send({ error: 'Hmm. We can\'t find that nomination.' });
+      // return response.status(404).send({ error: 'Hmm. We can\'t find that nomination.' });
+      return response.status(404).send({ 
+        status: response.statusCode,
+        error: 'Hmm. We can\'t find that nomination.'
+      });
     }
-
+    
     response.json({
       Nominations: result
     });
