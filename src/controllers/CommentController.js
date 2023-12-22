@@ -18,7 +18,6 @@ const Comment = require('../models/CommentModel');
 
 // GET all comments in db
 // eg GET localhost:3000/comments/all/
-
 router.get('/all', auth, async (request, response) => {
   try {
     const result = await Comment.find();
@@ -40,7 +39,7 @@ router.get('/all/nomination/:id', async (request, response) => {
 });
 
 // GET one comment by id
-router.get('/one/:id', async (request, response) => {
+router.get('/one/nomination/:id', async (request, response) => {
   try {
     const result = await Comment.findById(request.params.id);
     response.json(result);
@@ -49,7 +48,7 @@ router.get('/one/:id', async (request, response) => {
   }
 });
 
-// GET all comments by user id
+// GET all comments by poster user id
 router.get('/all/user/:id', async (request, response) => {
   const _id = request.params.id;
   try {
@@ -87,19 +86,38 @@ router.post('/post/:id',auth, async (request, response) => {
 });
 
 
+// POST Return all comments on an array of nominations
+// Requires a request with array of nomination ids
+router.post('/all/nominations', async (request, response) => {
+  try {
+    const nominationIds = request.body.nominationIds;
+    const result = await Comment.find({ nominationId: { $in: nominationIds } });
+    response.json(result);
+  } catch (err) {
+    errorSwitch(err, response);
+  }
+});
+
+
 /* === COMMENT PUT ROUTES === */
 
 
 // PATCH a comment by id
-// router.patch('/update/:id', async (request, response) => { 
-//   // verify user made the comment
-//   const _id = request.userId;
+router.patch('/update/:id', async (request, response) => { 
+  // verify user made the comment
+  const _id = request.userId;
 
-//   try {
-//     const result = await User.findById(_id);
-//     if (!result._id !== request.params.id) {
-//       return response.status(403).send('You are not authorised to do that. Wash your mouth with soap.');
-//     }
+  try {
+    const result = await User.findById(_id);
+    if (!result._id !== request.params.id) {
+      return response.status(403).send('You are not authorised to do that. Wash your mouth with soap.');
+    }
+
+  } catch (err) {
+    errorSwitch(err, response);
+  }
+
+});
 
 
 /* === COMMENT DELETE ROUTES === */
@@ -125,5 +143,5 @@ router.delete('/delete/:id', async (request, response) => {
   }
 });
 
-module.exports = router;
 
+module.exports = router;

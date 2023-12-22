@@ -18,7 +18,6 @@ app.use(express.json());
 
 // ====================
 
-const { logToFile } = require('./functions/logToFile');
 const UserRouter = require('./controllers/UserController');
 const NominationRouter = require('./controllers/NominationController');
 const AuthRouter = require('./controllers/AuthController');
@@ -36,7 +35,7 @@ app.get("/", (request, response) => {
 app.use('/auth', AuthRouter);
 app.use('/users', UserRouter);
 app.use('/nominations', NominationRouter);
-app.use('/comments', CommentRouter);
+// app.use('/comments', CommentRouter);
 
 
 // GET ALL OTHER ROUTES
