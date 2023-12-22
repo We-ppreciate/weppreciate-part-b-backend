@@ -60,7 +60,7 @@ router.post('/login', async (request, response) => {
         token
       });
     } else {
-      response.status(400).send('Invalid credentials');
+      response.status(401).send('Invalid credentials');
     }
   } catch(err) {
     console.error(err);
