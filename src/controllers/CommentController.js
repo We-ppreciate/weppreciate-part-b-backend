@@ -3,8 +3,6 @@ const router = express.Router();
 require('dotenv').config(); 
 const { Nomination } = require('../models/NominationModel');
 const { User } = require('../models/UserModel');
-const { logToFile } = require('../functions/logToFile');
-
 const { errorSwitch } = require('./ErrorController');
 const auth = require('../functions/verifyToken');
 const Comment = require('../models/CommentModel');
@@ -99,10 +97,10 @@ router.post('/all/nominations', async (request, response) => {
 });
 
 
-/* === COMMENT PUT ROUTES === */
+/* === COMMENT PATCH ROUTES === */
 
 
-// PATCH a comment by id
+// PATCH a comment by comment id
 router.patch('/update/:id', async (request, response) => { 
   // verify user made the comment
   const _id = request.userId;
@@ -110,7 +108,7 @@ router.patch('/update/:id', async (request, response) => {
   try {
     const result = await User.findById(_id);
     if (!result._id !== request.params.id) {
-      return response.status(403).send('You are not authorised to do that. Wash your mouth with soap.');
+      errorSwitch('You are not authorised to do that. Wash your mouth with soap.', response);
     }
 
   } catch (err) {

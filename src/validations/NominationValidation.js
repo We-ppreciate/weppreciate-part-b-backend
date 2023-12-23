@@ -29,10 +29,10 @@ schema.validate(payload, {abortEarly: false });
   });
 
   const updateNominationSchema = Joi.object({
-    nominationId: Joi.string().trim().required(),
+    nominationId: Joi.string().trim().optional(),
     isAward: Joi.boolean().optional().default(false),
     isReleased: Joi.boolean().optional().default(false),
-    releaseDate: Joi.string().pattern(new RegExp('^[0-9]{2}-[0-9]{2}-[0-9]{4}$')).allow(null, ''),
+    releaseDate: Joi.string().pattern(new RegExp('^[0-9]{2}-[0-9]{2}-[0-9]{4}$')).allow(null, '').optional(),
   });
 
   const validateNewNomination = validator(newNominationSchema);

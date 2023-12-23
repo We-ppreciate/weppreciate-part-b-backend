@@ -1,5 +1,4 @@
 const express = require('express');
-const { logToFile } = require('../functions/logToFile');
 
 // console.log(`error ${err}`);
 // Error handling switch
@@ -33,7 +32,6 @@ const errorSwitch = (err, response) => {
 
       
   response.status(statusCode).json({ message: message });
-  logToFile(`UserController.js: ${statusCode}, ${err.message}`);
   console.log(`UserController.js: ${statusCode}, ${err.message}`);
 
 };
