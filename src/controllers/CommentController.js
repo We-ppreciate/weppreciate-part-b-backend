@@ -130,7 +130,7 @@ router.patch('/update/:id', async (request, response) => {
 // DELETE a comment by id
 // eg DELETE localhost:3000/comments/delete/5f2f8e3d2b8e9a0017b0e9f0
 router.delete('/delete/:id', async (request, response) => {
-  // const _id = request.userId;
+  const _id = request.params.id;
 
   try {
     const result = await User.findById(_id);

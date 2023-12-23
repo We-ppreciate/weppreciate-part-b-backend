@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const { Nomination } = require('../models/NominationModel');
 const { User } = require('../models/UserModel');
-
 const auth = require('../functions/verifyToken');
 const { validateNewNomination, validateUpdateNomination } = require('../validations/NominationValidation');
 const { errorSwitch } = require('./ErrorController');

@@ -31,7 +31,7 @@ router.get('/user', async (request, response) => {
 router.post('/login', async (request, response) => {
   try {
     const user = await User.findOne({ email: request.body.email })
-
+    // Explicitly selects passwordHash from document
     .select('_id name email businessUnit lineManagerId userTagLine userPhotoKey isFullUser isLineManager isSeniorManager isAdmin +passwordHash');
     
     if (!user) {
@@ -85,9 +85,6 @@ router.patch('/reset/:id', auth, async (request, response) => {
     if (!requestor) {
       return response.status(400).send(`User ${requestor} not found.`);
     };
-    
-
-    // console.log(`id: ${requestorId},\ntargetId: ${targetId},\nnewPassword: ${newPassword},\ntarget: ${target},\nrequestor: ${JSON.stringify(requestor)},\nisAdmin: ${requestor.isAdmin}.`);
 
     if (typeof newPassword !== 'string') {
       return response.status(400).send('Invalid password.');
