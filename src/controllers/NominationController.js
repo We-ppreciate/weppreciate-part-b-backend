@@ -33,7 +33,10 @@ const { errorSwitch } = require('./ErrorController');
     try {
       // if id not found
       if (!id) {
-        return response.status(400).send({ error: 'ID not provided.' });
+        return response.status(400).send({ 
+          status: response.statusCode,
+          error: 'ID not provided.' 
+        });
       }
       // ... otherwise return
       const result = await Nomination.find({recipientUser: id});
@@ -220,17 +223,19 @@ router.post('/new', auth, async (request, response) => {
   try {
     const checkExist = await User.findById(_id);
     if (!checkExist._id) {
-      return response.status(404).send({ error: 'Hmm. We can\'t find that person. I\'ll check behind the couch' });
+      return response.status(404).send({ 
+        status: response.statusCode,
+        error: 'Hmm. We can\'t find that person. I\'ll check behind the couch' });
     };
 
     const { recipientUser, nominatorFullUser } = request.body;
 
     // Check if recipientUser is equal to nominatorFullUser
     if (recipientUser === nominatorFullUser) {
-      response.status(400).json({
-        message: 'Nominating yourself? That\'s a bit cheeky.'
+      return response.status(400).send({
+        status: response.statusCode,
+        error: 'Nominating yourself? That\'s a bit cheeky.'
       });
-      return;
     }
 
     const newNomination = new Nomination(request.body);
@@ -247,6 +252,7 @@ router.post('/new', auth, async (request, response) => {
 
 
 /* === NOMINATION PATCH ROUTES === */
+
 
 /* accepts JSON body:
 {
@@ -275,7 +281,7 @@ router.patch('/update/nom/:id', auth, async (request, response) => {
     if (!requestor.isSeniorManager && !requestor.isAdmin) {
       return response.status(403).send({ 
         status: response.statusCode,
-        error: 'Your admin or senior manager has the access to update that. Please contact them, and buy them a coffee. They deserve it.' 
+        error: 'Your admin or senior manager has the access to update that. Please contact them. Also buy them a coffee. They deserve it.' 
       });
     }
 
@@ -293,6 +299,7 @@ router.patch('/update/nom/:id', auth, async (request, response) => {
 
 
 /* === NOMINATION DELETE ROUTES === */
+
 
 // DELETE admin by id
 // eg DELETE localhost:3000/nominations/delete/5f2f8e3d2b8e9a0017b0e9f0

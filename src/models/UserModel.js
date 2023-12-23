@@ -2,13 +2,6 @@ const mongoose = require('mongoose');
 // const bcrypt = require('bcrypt');
 
 const UserSchema = new mongoose.Schema({
-  upn: {
-    type: String,
-    //TODO: Change required dependency after testing
-    required: false,
-    lowercase: true,
-    trim: true
-  },
   email: {
     type: String,
     required: [true, 'Email is missing.'],

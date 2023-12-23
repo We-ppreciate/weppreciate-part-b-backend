@@ -6,11 +6,7 @@ const { User } = require('../models/UserModel');
 const { Nomination } = require('../models/NominationModel');
 const { Comment } = require('../models/CommentModel');
 const { Category } = require('../models/CategoryModel');
-const { logToFile } = require('../functions/logToFile');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-
-
 
 
 /* === Password Hashes for original seedingh === */
@@ -55,6 +51,11 @@ let passwords = [
     email: 'jo.newtown@yourcompany.com',
     password: 'password',
     passwordHash: null
+  },
+  {
+    email: 'jeevan.ng@yourcompany.com',
+    password: 'password',
+    passwordHash: null
   }
 ]
 
@@ -64,7 +65,6 @@ const passwordHashForSeed = async () => {
       passwords[i].passwordHash = await bcrypt.hash(passwords[i].password, 10);
       
     } catch (error) {
-      logToFile(`seed.js: ${error}`);
       console.log(`seed.js: ${error}`);
     }
   }
@@ -78,8 +78,6 @@ passwordHashForSeed();
 /* === SEED FUNCTION STARTS === */
 
 databaseConnect().then(async () => {
-  logToFile('=== seed.js executed ===');
-  logToFile('seed.js: Creating user seed data!');
   console.log('=== seed.js executed ===');
   console.log('seed,js: Creating user seed data!')
 
@@ -125,10 +123,7 @@ databaseConnect().then(async () => {
     isAdmin: false,
   });
 
-  natePicone.upn = natePicone.email.split('@')[0];
-
   await natePicone.save().then(() => {
-    logToFile(`seed.js: ${natePicone.name} saved, with id ${natePicone._id}\n${natePicone}`);
     console.log(`seed.js: ${natePicone.name} saved, with id ${natePicone._id}\n${natePicone}`);
   });
 
@@ -151,10 +146,7 @@ databaseConnect().then(async () => {
     isAdmin: false,
   });
 
-  edDougherty.upn = edDougherty.email.split('@')[0];
-
   await edDougherty.save().then(() => {
-    logToFile(`seed.js: ${edDougherty.name} saved, with id ${edDougherty._id}\n${edDougherty}`);
     console.log(`seed.js: ${edDougherty.name} saved, with id ${edDougherty._id}\n${edDougherty}`);
   });
 
@@ -176,10 +168,8 @@ databaseConnect().then(async () => {
     isAdmin: false,
   });
 
-  hannahSallows.upn = hannahSallows.email.split('@')[0];
 
   await hannahSallows.save().then(() => {
-    logToFile(`seed.js: ${hannahSallows.name} saved, with id ${hannahSallows._id}\n${hannahSallows}`);
     console.log(`seed.js: ${hannahSallows.name} saved, with id ${hannahSallows._id}\n${hannahSallows}`);
   });
 
@@ -201,10 +191,8 @@ databaseConnect().then(async () => {
     isAdmin: true,
   });
 
-  katieLock.upn = katieLock.email.split('@')[0];
 
   await katieLock.save().then(() => {
-    logToFile(`seed.js: ${katieLock.name} saved, with id ${katieLock._id}\n${katieLock}`);
     console.log(`seed.js: ${katieLock.name} saved, with id ${katieLock._id}\n${katieLock}`);
   });
 
@@ -226,10 +214,7 @@ databaseConnect().then(async () => {
     isAdmin: false,
   });
 
-  jordanBenjamin.upn = jordanBenjamin.email.split('@')[0];
-
   await jordanBenjamin.save().then(() => {
-    logToFile(`seed.js: ${jordanBenjamin.name} saved, with id ${jordanBenjamin._id}\n${jordanBenjamin}`);
     console.log(`seed.js: ${jordanBenjamin.name} saved, with id ${jordanBenjamin._id}\n${jordanBenjamin}`);
   });
 
@@ -250,8 +235,6 @@ databaseConnect().then(async () => {
     isSeniorManager: false,
     isAdmin: false,
   });
-
-  alexGreatbeard.upn = alexGreatbeard.email.split('@')[0];
 
   await alexGreatbeard.save().then(() => {
     console.log(`seed.js: ${alexGreatbeard.name} saved, with id ${alexGreatbeard._id}\n${alexGreatbeard}`);
@@ -274,8 +257,6 @@ databaseConnect().then(async () => {
     isSeniorManager: true,
     isAdmin: false,
   });
-
-  carolinaReaper.upn = carolinaReaper.email.split('@')[0];
 
   await carolinaReaper.save().then(() => {
     console.log(`seed.js: ${carolinaReaper.name} saved, with id ${carolinaReaper._id}\n${carolinaReaper}`);
@@ -300,8 +281,6 @@ const sallySuperstar = new User({
   isAdmin: false,
 });
 
-sallySuperstar.upn = sallySuperstar.email.split('@')[0];
-
 await sallySuperstar.save().then(() => {
   console.log(`seed.js: ${sallySuperstar.name} saved, with id ${sallySuperstar._id}\n${sallySuperstar}`);
 });
@@ -324,8 +303,6 @@ const joNewtown = new User({
   isAdmin: true,
 });
 
-joNewtown.upn = joNewtown.email.split('@')[0];
-
 await joNewtown.save().then(() => {
   console.log(`seed.js: ${joNewtown.name} saved, with id ${joNewtown._id}\n${joNewtown}`);
 });
@@ -338,7 +315,7 @@ const jeevanNg = new User({
   },
   email: 'jeevan.ng@yourcompany.com',
   businessUnit: 'Business Services',
-  passwordHash: passwords.find(obj => obj.email === 'jo.newton@yourcompany.com').passwordHash,
+  passwordHash: passwords.find(obj => obj.email === 'jeevan.ng@yourcompany.com').passwordHash,
   lineManagerId: null,
   userTagLine: 'Success is the culmination of effort.',
   userPhotoKey: 'https://storage.googleapis.com/weppreciate-store/profile/00048-1555748969.png',
@@ -348,10 +325,9 @@ const jeevanNg = new User({
   isAdmin: true,
 });
 
-joNewtown.upn = joNewtown.email.split('@')[0];
 
 await joNewtown.save().then(() => {
-  console.log(`seed.js: ${joNewtown.name} saved, with id ${joNewtown._id}\n${joNewtown}`);
+  console.log(`seed.js: ${jeevanNg.name} saved, with id ${jeevanNg._id}\n${jeevanNg}`);
 });
 
 
@@ -382,7 +358,6 @@ await joNewtown.save().then(() => {
 
 
   } catch (error) {
-    logToFile(`seed.js: ${error}`);
     console.log(`seed.js: ${error}`);
   } 
   
@@ -442,7 +417,7 @@ await joNewtown.save().then(() => {
     });
     
     await Category.insertMany([sayDo, commitment, collaborate, Challenging, learning, spirited, instant]).catch(error => {
-      logToFile(`seed.js: ${error}`);
+
       console.log(`seed.js: ${error}`);
     })
   
@@ -488,7 +463,6 @@ await joNewtown.save().then(() => {
   });
 
   await instantNate.save().then(() => {
-    logToFile(`seed.js: Award for ${instantNate.recipientUser.name} saved, with id ${instantNate._id}\n${instantNate}`);
     console.log(`seed.js: Award for ${instantNate.recipientUser.name} saved, with id ${instantNate._id}\n${instantNate}`);
   });
 
@@ -508,7 +482,6 @@ await joNewtown.save().then(() => {
   });
 
   await instantEd.save().then(() => {
-    logToFile(`seed.js: Award for ${instantEd.recipientUser.name} saved, with id ${instantEd._id}\n${instantEd}`);
     console.log(`seed.js: Award for ${instantEd.recipientUser.name} saved, with id ${instantEd._id}\n${instantEd}`);
 
   });
@@ -535,7 +508,6 @@ await joNewtown.save().then(() => {
   });
 
   await nominateEd.save().then(() => {
-    logToFile(`seed.js: Award for ${nominateEd.recipientUser.name} saved, with id ${nominateEd._id}\n${nominateEd}`);
     console.log(`seed.js: Award for ${nominateEd.recipientUser.name} saved, with id ${nominateEd._id}\n${nominateEd}`);
   });  
 
@@ -555,14 +527,12 @@ await joNewtown.save().then(() => {
   });
 
   await nominateKatie.save().then(() => {
-    logToFile(`seed.js: Award for ${nominateKatie.recipientUser.name} saved, with id ${nominateKatie._id}\n${nominateKatie}`);
     console.log(`seed.js: Award for ${nominateKatie.recipientUser.name} saved, with id ${nominateKatie._id}\n${nominateKatie}`);
   });  
 
   /* TO DO: COMMENT SEED DATA */
 
   
-
 
   databaseClose();
   

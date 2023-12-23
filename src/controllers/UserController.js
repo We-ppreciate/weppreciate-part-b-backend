@@ -24,7 +24,10 @@ router.get('/all', auth, async (request, response) => {
     const resultAll = await User.find();
     
     if (!result) {
-      return response.status(404).send({ error: 'Hmm. We can\'t find that person. I\'ll check behind the couch' });
+      return response.status(404).send({ 
+        status: response.statusCode,
+        error: 'Hmm. We can\'t find that person. I\'ll check behind the couch' 
+      });
     }
 
     if (result.isAdmin) {
@@ -141,7 +144,10 @@ router.get('/all/manager/:id', auth, async (request, response) => {
     const outcome = await User.find({ lineManagerId: request.params.id} );
     
     if (!result.isLineManager && !result.isSeniorManager && !result.isAdmin) {
-      return response.status(403).send('You are not authorised to see this. Close your eyes and walk away.');
+      return response.status(403).send({
+        status: response.statusCode,
+        error: 'You are not authorised to see this. Close your eyes and walk away.'
+      });
     }
     
     response.json({
@@ -196,7 +202,10 @@ const newUserSchema = router.post('/new', auth, async (request, response) => {
   try {
     const result = await User.findById(_id);
     if(!result.isAdmin) {
-      return response.status(403).send('You are not authorised to do that. Wash your mouth with soap.');
+      return response.status(403).send({ 
+        status: response.status,
+        error: 'You are not authorised to do that. Wash your mouth with soap.'
+      });
     };
 
     const newUser = new User(request.body);
@@ -231,11 +240,17 @@ const updateSelfSchema = router.patch('/update/self/:id', auth, async (request, 
   try {
     // Checking db for User document
     if (!target) {
-      return response.status(404).send({ error: 'Hmm. We can\'t find that person. I\'ll check behind the couch' });
+      return response.status(404).send({ 
+        status: response.statusCode,
+        error: 'Hmm. We can\'t find that person. I\'ll check behind the couch' 
+      });
     }
     // Checking requestor is only updating their own document
     if (requestor.id !== target.id) {
-      return response.status(400).send({ error: 'You can only update your own details, you prankster, you.' });
+      return response.status(400).send({ 
+        status: response.status,
+        error: 'You can only update your own details, you prankster, you.' 
+      });
     }
 
     // Assigning validated request.body to User document
@@ -302,7 +317,10 @@ router.delete('/delete/admin/:id', auth, async (request, response) => {
   try {
     const result = await User.findById(_id);
     if (!result.isAdmin) {
-      return response.status(403).send('You are not authorised to do that. Wash your mouth with soap.');
+      return response.status(403).send({ 
+        status: response.status,
+        error: 'You are not authorised to do that. Wash your mouth with soap.'
+      });
     }
 
     const outcome = await User.findByIdAndDelete(request.params.id);
