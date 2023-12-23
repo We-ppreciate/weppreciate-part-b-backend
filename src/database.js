@@ -2,12 +2,12 @@ require('dotenv').config({ path: '../.env' });
 const mongoose = require('mongoose');
 const { logToFile } = require('./functions/logToFile');
 
-
+let dbUri = process.env.DB_URI;
 
 async function databaseConnect(){
 	try {
 
-		await mongoose.connect('mongodb+srv://weppreciate-admin:1ovF7VeKcBxVKyZW@weppreciate-intern.iqwpzfk.mongodb.net/?retryWrites=true&w=majority');
+		await mongoose.connect(dbUri);
 
 		mongoose.connection.on('connecting', function() {
 			console.log('database.js: Connecting to MongoDB...');

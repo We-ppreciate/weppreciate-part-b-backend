@@ -14,7 +14,12 @@ const CommentSchema = new mongoose.Schema({
 	commentBody: {
     type: String,
     required: [true, "You must enter a comment."]
-  } 
+  },
+  commentDate: {
+    type: Date,
+    default: Date.now,
+    required: true
+  }
 
 });
 
