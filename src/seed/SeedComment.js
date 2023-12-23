@@ -4,16 +4,14 @@ require('dotenv').config();
 const { databaseConnect, databaseClose } = require('../database');
 const { User } = require('../models/UserModel');
 const { Comment } = require('../models/CommentModel');
-const { logToFile } = require('../functions/logToFile');
 
 
 const getId = async (email) => {
   try {
     const user = await User.findOne({ email: email });
     return user ? user._id : null;
-  } catch (error) {
-    console.error(`Error getting ID for email ${email}:`, error);
-    return null;
+  } catch (err) {
+    errorSwitch(err, response);
   }
 }
 

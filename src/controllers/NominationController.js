@@ -20,7 +20,6 @@ const { errorSwitch } = require('./ErrorController');
       response.json({
         Nominations: result
       });
-
     } catch (err) {
       errorSwitch(err, response);
     }

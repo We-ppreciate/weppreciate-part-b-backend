@@ -27,6 +27,7 @@ router.get('/all', auth, async (request, response) => {
 });
 
 // GET all comments on a nomination
+// eg GET localhost:3000/comments/all/nomination/5f2f8e3d2b8e9a0017b0e9f0
 router.get('/all/nomination/:id', async (request, response) => {
   try {
     const result = await Comment.find({ nominationId: request.params.id });
@@ -37,6 +38,7 @@ router.get('/all/nomination/:id', async (request, response) => {
 });
 
 // GET one comment by id
+// eg GET localhost:3000/comments/one/nomination/5f2f8e3d2b8e9a0017b0e9f0
 router.get('/one/nomination/:id', async (request, response) => {
   try {
     const result = await Comment.findById(request.params.id);
@@ -47,6 +49,7 @@ router.get('/one/nomination/:id', async (request, response) => {
 });
 
 // GET all comments by poster user id
+// eg GET localhost:3000/comments/all/user/5f2f8e3d2b8e9a0017b0e9f0
 router.get('/all/user/:id', async (request, response) => {
   const _id = request.params.id;
   try {
@@ -62,6 +65,7 @@ router.get('/all/user/:id', async (request, response) => {
 
 
 // POST a comment on a nomination
+// eg POST localhost:3000/comments/post/5f2f8e3d2b8e9a0017b0e9f0
 router.post('/post/:id',auth, async (request, response) => {
   const _id = request.userId;
 
@@ -86,6 +90,7 @@ router.post('/post/:id',auth, async (request, response) => {
 
 // POST Return all comments on an array of nominations
 // Requires a request with array of nomination ids
+// eg POST localhost:3000/comments/all/nominations
 router.post('/all/nominations', async (request, response) => {
   try {
     const nominationIds = request.body.nominationIds;
@@ -101,6 +106,7 @@ router.post('/all/nominations', async (request, response) => {
 
 
 // PATCH a comment by comment id
+// eg PATCH localhost:3000/comments/update/5f2f8e3d2b8e9a0017b0e9f0
 router.patch('/update/:id', async (request, response) => { 
   // verify user made the comment
   const _id = request.userId;
@@ -122,14 +128,15 @@ router.patch('/update/:id', async (request, response) => {
 
 
 // DELETE a comment by id
+// eg DELETE localhost:3000/comments/delete/5f2f8e3d2b8e9a0017b0e9f0
 router.delete('/delete/:id', async (request, response) => {
   // const _id = request.userId;
 
   try {
-    // const result = await User.findById(_id);
-    // if (!result.isAdmin) {
-    //   return response.status(403).send('You are not authorised to do that. Wash your mouth with soap.');
-    // }
+    const result = await User.findById(_id);
+    if (!result.isAdmin) {
+      return response.status(403).send('You are not authorised to do that. Wash your mouth with soap.');
+    }
 
     const outcome = await Comment.findByIdAndDelete(request.params.id);
     

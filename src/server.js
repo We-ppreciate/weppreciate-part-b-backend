@@ -35,7 +35,7 @@ app.get("/", (request, response) => {
 app.use('/auth', AuthRouter);
 app.use('/users', UserRouter);
 app.use('/nominations', NominationRouter);
-// app.use('/comments', CommentRouter);
+app.use('/comments', CommentRouter);
 
 
 // GET ALL OTHER ROUTES
