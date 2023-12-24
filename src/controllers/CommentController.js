@@ -91,7 +91,8 @@ router.post('/post/:id',auth, async (request, response) => {
 // POST Return all comments on an array of nominations
 // Requires a request with array of nomination ids
 // eg POST localhost:3000/comments/all/nominations
-router.post('/all/nominations', async (request, response) => {
+
+router.post('/all/nominations', auth, async (request, response) => {
   try {
     const nominationIds = request.body.nominationIds;
     const result = await Comment.find({ nominationId: { $in: nominationIds } });
@@ -107,7 +108,7 @@ router.post('/all/nominations', async (request, response) => {
 
 // PATCH a comment by comment id
 // eg PATCH localhost:3000/comments/update/5f2f8e3d2b8e9a0017b0e9f0
-router.patch('/update/:id', async (request, response) => { 
+router.patch('/update/:id', auth, async (request, response) => { 
   // verify user made the comment
   const _id = request.userId;
 
@@ -129,16 +130,17 @@ router.patch('/update/:id', async (request, response) => {
 
 // DELETE a comment by id
 // eg DELETE localhost:3000/comments/delete/5f2f8e3d2b8e9a0017b0e9f0
-router.delete('/delete/:id', async (request, response) => {
-  const _id = request.params.id;
+router.delete('/delete/:id', auth, async (request, response) => {
+  const requestorId = request.userId;
+  const targetComment = request.params.id;
+  const requestor = await User.findById(requestorId);
 
   try {
-    const result = await User.findById(_id);
-    if (!result.isAdmin) {
+    if (!requestor.isAdmin) {
       return response.status(403).send('You are not authorised to do that. Wash your mouth with soap.');
     }
 
-    const outcome = await Comment.findByIdAndDelete(request.params.id);
+    const outcome = await Comment.findByIdAndDelete(targetComment);
     
     response.json({
       User: outcome
