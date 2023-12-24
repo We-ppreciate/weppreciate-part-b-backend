@@ -13,7 +13,6 @@ async function auth(request, response, next){
   // Remove the 'Bearer ' prefix
   const token = authHeader.replace('Bearer ', '');
 
-  console.log('Token:', token);
   const decoded = jwt.decode(token);
 
   // The `exp` claim represents the expiration time in seconds since the epoch
@@ -21,9 +20,6 @@ async function auth(request, response, next){
 
   // Convert the expiration time to a Date object
   const expirationDate = new Date(expirationTimeInSeconds * 1000);
-
-  console.log('Expiration Time in Seconds:', expirationTimeInSeconds);
-  console.log('Expiration Date:', expirationDate);
 
 
   try {
