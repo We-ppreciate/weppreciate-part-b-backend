@@ -5,7 +5,8 @@ const { Nomination } = require('../models/NominationModel');
 const { User } = require('../models/UserModel');
 const { errorSwitch } = require('./ErrorController');
 const auth = require('../functions/verifyToken');
-const Comment = require('../models/CommentModel');
+const { Comment } = require('../models/CommentModel');
+const { validateNewComment, validateUpdateComment } = require('../validations/CommentValidation');
 
 
 
@@ -28,7 +29,7 @@ router.get('/all', auth, async (request, response) => {
 
 // GET all comments on a nomination
 // eg GET localhost:3000/comments/all/nomination/5f2f8e3d2b8e9a0017b0e9f0
-router.get('/all/nomination/:id', async (request, response) => {
+router.get('/all/nomination/:id', auth, async (request, response) => {
   try {
     const result = await Comment.find({ nominationId: request.params.id });
     response.json(result);
@@ -39,7 +40,7 @@ router.get('/all/nomination/:id', async (request, response) => {
 
 // GET one comment by id
 // eg GET localhost:3000/comments/one/nomination/5f2f8e3d2b8e9a0017b0e9f0
-router.get('/one/nomination/:id', async (request, response) => {
+router.get('/one/comment/:id', async (request, response) => {
   try {
     const result = await Comment.findById(request.params.id);
     response.json(result);
@@ -66,7 +67,13 @@ router.get('/all/user/:id', async (request, response) => {
 
 // POST a comment on a nomination
 // eg POST localhost:3000/comments/post/5f2f8e3d2b8e9a0017b0e9f0
-router.post('/post/:id',auth, async (request, response) => {
+const newCommentSchema = router.post('/post/:id', auth, async (request, response) => {
+  const { error, value } = validateNewComment(request.body);
+
+  if (error) {
+    return response.status(400).send(error.details);
+  }
+
   const _id = request.userId;
 
   try {
@@ -79,7 +86,7 @@ router.post('/post/:id',auth, async (request, response) => {
     const outcome = await newComment.save();
     
     response.json({
-      User: outcome
+      Comment: outcome
     });
     
   } catch (err) {
@@ -87,36 +94,48 @@ router.post('/post/:id',auth, async (request, response) => {
   }
 });
 
-
-// POST Return all comments on an array of nominations
-// Requires a request with array of nomination ids
-// eg POST localhost:3000/comments/all/nominations
-
-router.post('/all/nominations', auth, async (request, response) => {
-  try {
-    const nominationIds = request.body.nominationIds;
-    const result = await Comment.find({ nominationId: { $in: nominationIds } });
-    response.json(result);
-  } catch (err) {
-    errorSwitch(err, response);
-  }
-});
-
-
 /* === COMMENT PATCH ROUTES === */
 
 
 // PATCH a comment by comment id
 // eg PATCH localhost:3000/comments/update/5f2f8e3d2b8e9a0017b0e9f0
-router.patch('/update/:id', auth, async (request, response) => { 
-  // verify user made the comment
-  const _id = request.userId;
+const updateCommentSchema = router.patch('/update/:id', auth, async (request, response) => { 
+  // apply validation - required field is commentBody
+  const { error, value } = validateUpdateComment(request.body);
+
+  if (error) {
+    return response.status(400).send(error.details);
+  }
 
   try {
-    const result = await User.findById(_id);
-    if (!result._id !== request.params.id) {
-      errorSwitch('You are not authorised to do that. Wash your mouth with soap.', response);
+    const comment = await Comment.findById(request.params.id);
+
+    // check comment exists
+    if (!comment) {
+      return response.status(404).send('Comment not found.');
     }
+    
+    const commenter = comment.commenterId;
+    const commentId = comment._id;
+    let commentBody = comment.commentBody
+    const requester = await User.findById(request.userId);
+
+    const updateBody = request.body.commentBody;
+    
+    // check user created comment or is admin
+    if (!requester.isAdmin || (commenter != requester && !requester.isAdmin)) {
+      return response.status(403).send('You are not authorised to do that. Wash your mouth with soap.');
+    }
+
+    // update with new string
+    comment.commentBody = updateBody;
+
+    //save to db
+    const outcome = await comment.save();
+
+    response.json({
+      Comment: outcome
+    });
 
   } catch (err) {
     errorSwitch(err, response);
@@ -143,7 +162,7 @@ router.delete('/delete/:id', auth, async (request, response) => {
     const outcome = await Comment.findByIdAndDelete(targetComment);
     
     response.json({
-      User: outcome
+      Comment: outcome
     });
   } catch (err) {
     errorSwitch(err, response);

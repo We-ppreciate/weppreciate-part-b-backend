@@ -1,5 +1,4 @@
 const express = require('express');
-const { logToFile } = require('../functions/logToFile');
 const Joi = require('joi').extend(require('@joi/date')); 
 
 
@@ -12,3 +11,15 @@ const newCommentSchema = Joi.object({
 	commentBody: Joi.string().trim().required(),
   commentDate: Joi.date().format('D-MM-YYYY').required(),
 });
+
+const updateCommentSchema = Joi.object({
+	commentBody: Joi.string().trim().required(),
+});
+
+const validateNewComment = validator(newCommentSchema);
+const validateUpdateComment = validator(updateCommentSchema);
+
+module.exports = {
+  validateNewComment,
+  validateUpdateComment
+}
