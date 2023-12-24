@@ -240,7 +240,7 @@ router.post('/new', auth, async (request, response) => {
     const result = await newNomination.save();
     
     response.json({
-      User: result
+      Nomination: result
     });
     
     } catch (err) {
@@ -302,8 +302,10 @@ router.patch('/update/nom/:id', auth, async (request, response) => {
 // DELETE admin by id
 // eg DELETE localhost:3000/nominations/delete/5f2f8e3d2b8e9a0017b0e9f0
 router.delete('/delete/:id', auth, async (request, response) => {
+  const _id = await Nomination.findById(request.params.id);
+  const requestor = await User.findById(request.userId);
+  console.log(`requestor: ${requestor}, _id: ${_id}`)
   try {
-    const requestor = await User.findById(_id);
     
     if (!requestor.isAdmin) {
       return response.status(403).send({ 
@@ -312,7 +314,7 @@ router.delete('/delete/:id', auth, async (request, response) => {
       });
     };
     
-    const result = await Nomination.findByIdAndDelete(request.params.id);
+    const result = await Nomination.findByIdAndDelete(_id);
     
     if (!result) {
       // return response.status(404).send({ error: 'Hmm. We can\'t find that nomination.' });
