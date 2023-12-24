@@ -16,8 +16,7 @@ const CommentSchema = new mongoose.Schema({
     required: [true, "You must enter a comment."]
   },
   commentDate: {
-    type: Date,
-    default: Date.now,
+    type: String,
     required: true
   }
 
@@ -26,4 +25,6 @@ const CommentSchema = new mongoose.Schema({
 
 const Comment = mongoose.model('Comment', CommentSchema);
 
-module.exports = Comment;
+module.exports = {
+  Comment
+};
