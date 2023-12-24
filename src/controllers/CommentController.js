@@ -91,6 +91,7 @@ router.post('/post/:id',auth, async (request, response) => {
 // POST Return all comments on an array of nominations
 // Requires a request with array of nomination ids
 // eg POST localhost:3000/comments/all/nominations
+
 router.post('/all/nominations', auth, async (request, response) => {
   try {
     const nominationIds = request.body.nominationIds;
