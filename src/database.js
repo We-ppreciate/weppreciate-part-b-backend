@@ -1,6 +1,5 @@
 require('dotenv').config({ path: '../.env' });
 const mongoose = require('mongoose');
-const { logToFile } = require('./functions/logToFile');
 
 let dbUri = process.env.DB_URI;
 

@@ -1,5 +1,4 @@
 const express = require('express');
-const { logToFile } = require('../functions/logToFile');
 const Joi = require('joi').extend(require('@joi/date')); 
 
 

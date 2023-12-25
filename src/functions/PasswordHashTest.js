@@ -39,7 +39,6 @@ const passwordHashForSeed = async () => {
       passwords[i].passwordHash = await bcrypt.hash(passwords[i].password, 10);
       
     } catch (error) {
-      logToFile(`seed.js: ${error}`);
       console.log(`seed.js: ${error}`);
     }
   }

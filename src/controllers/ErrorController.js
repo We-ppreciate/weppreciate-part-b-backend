@@ -1,6 +1,6 @@
 const express = require('express');
 
-// console.log(`error ${err}`);
+
 // Error handling switch
 const errorSwitch = (err, response) => {
   let statusCode = err.status || 500;
@@ -30,7 +30,6 @@ const errorSwitch = (err, response) => {
       break;      
     };
 
-      
   response.status(statusCode).json({ message: message });
   console.log(`UserController.js: ${statusCode}, ${err.message}`);
 

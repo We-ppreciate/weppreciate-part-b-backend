@@ -1,5 +1,4 @@
 const express = require('express');
-const { logToFile } = require('../functions/logToFile');
 const Joi = require('joi');
 
 
@@ -53,16 +52,3 @@ module.exports = {
   validateUpdateSelf,
   validateUpdateAdmin
 }
-
-
-/* holding for authorisation
-
-const updateSelfSchema = Joi.object({
-  newPassword: Joi.string().min(8).max(120).pattern(/^(?=.*[0-9])(?=.*[!@#$%^&*])/)
-})
-
-const updateAdminSchema = Joi.object({
-  newPassword: Joi.string().min(8).max(120).pattern(/^(?=.*[0-9])(?=.*[!@#$%^&*])/),
-})
-
-*/

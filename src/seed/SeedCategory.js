@@ -6,7 +6,6 @@ const { User } = require('../models/UserModel');
 const { Nomination } = require('../models/NominationModel');
 const { Comments } = require('../models/CommentModel');
 const { Category } = require('../models/CategoryModel');
-const { logToFile } = require('../functions/logToFile');
 
 
 
@@ -64,7 +63,6 @@ databaseConnect().then(async () => {
   });
   
   await Category.insertMany([sayDo, commitment, collaborate, Challenging, learning, spirited, instant]).catch(error => {
-    logToFile(`seed.js: ${error}`);
     console.log(`seed.js: ${error}`);
   })
 

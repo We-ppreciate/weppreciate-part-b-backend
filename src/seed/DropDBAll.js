@@ -1,49 +1,43 @@
 require('dotenv').config();
-const mongoose = require('mongoose');
-const { User } = require('../models/UserModel');
 const { databaseConnect, databaseClose } = require('../database');
-const { logToFile } = require('../functions/logToFile');
+const { User } = require('../models/UserModel');
 const { Nomination } = require('../models/NominationModel');
+const { Comment } = require('../models/CommentModel');
+const { Category } = require('../models/CategoryModel');
+const { errorSwitch } = require('../controllers/ErrorController');
 
 
 /* MOVE TO DATABASE.JS? */
 
 
-async function dropCollection() {
-  logToFile("dropdb.js: === drop collections executed ===");
+async function dropCpllection (collection, name) {
+  try {
+    await collection.collection.drop();
+    console.log(`dropdb.js: ${name} collection dropped`);
+  } catch (err) {
+    console.log(`dropdb.js: Failed to drop ${name} collection: ${err}`);
+  } 
+}
+
+async function dropAllCollections() {
   console.log("dropdb.js: === drop collections executed ===");
 
   try {
     await databaseConnect();
   } catch (err) {
-    logToFile('Failed to connect to database:', err);
     console.log('Failed to connect to database:', err);
     return;
   }
 
-  try {
-    // drop user collection
-    await User.collection.drop();
-    logToFile("dropdb.js: User collection dropped");
-    console.log("dropdb.js: User collection dropped");
-  } catch (err) {
-    logToFile('Failed to drop User collection:', err);
-    console.log('Failed to drop User collection:', err);
-  }
+  await dropCpllection(User, 'User');
+  await dropCpllection(Nomination, 'Nomination');
+  await dropCpllection(Comment, 'Comment');
+  await dropCpllection(Category, 'Category');
 
-  try {
-    // drop nomination collection
-    await Nomination.collection.drop();
-    logToFile("dropdb.js: Nomination collection dropped");
-    console.log("dropdb.js: Nomination collection dropped");
-  } catch (err) {
-    logToFile('Failed to drop Nomination collection:', err);
-    console.log('Failed to drop Nomination collection:', err);
-  } finally {
-    await databaseClose();
-  }
+  await databaseClose();
 }
 
-dropCollection();
+dropAllCollections();
+
 
 

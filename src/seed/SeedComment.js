@@ -43,7 +43,6 @@ databaseConnect().then(async () => {
 
     await Comment.insertMany([edToKatie, nateToKatie])
   } catch (error) {
-    logToFile(`SeedComment.js: ${error}`);
     console.log(`SeedComment.js: ${error}`);
   };
 
