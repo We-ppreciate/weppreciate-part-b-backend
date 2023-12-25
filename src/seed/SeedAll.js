@@ -1,5 +1,4 @@
 require('dotenv').config();
-
 const mongoose = require('mongoose');
 const { databaseConnect, databaseClose } = require('../database');
 const { User } = require('../models/UserModel');
@@ -271,14 +270,7 @@ async function seedUsers() {
 
 /* === SEED FUNCTION STARTS === */
 
-databaseConnect().then(async () => {
-  console.log('=== seed.js executed ===');
-  console.log('seed,js: Creating user seed data!')
-
-
   /* === USER SEED DATA === */
-
-
   // {
   //   _id: objectId,
   //   name: {
@@ -633,7 +625,8 @@ async function seedCategories() {
      Test drop db
      Test seed db
 
-  
+  */
+
   // { 
   //   recipientUser: User Object,
   //   nominatorFullUser: User Object,
@@ -654,6 +647,8 @@ async function seedCategories() {
   //   releaseDate: Date,
   // }
 
+async function seedNominations() {
+
   const instantNate = new Nomination({
     _id: new mongoose.Types.ObjectId(),
     recipientUser: natePicone,
@@ -669,10 +664,6 @@ async function seedCategories() {
     releaseDate: null
   });
 
-  await instantNate.save().then(() => {
-    console.log(`seed.js: Award for ${instantNate.recipientUser.name} saved, with id ${instantNate._id}\n${instantNate}`);
-  });
-
   const instantEd = new Nomination({
     _id: new mongoose.Types.ObjectId(),
     recipientUser: edDougherty,
@@ -686,11 +677,6 @@ async function seedCategories() {
     isNominationInstant: true,
     isReleased: false,
     releaseDate: null
-  });
-
-  await instantEd.save().then(() => {
-    console.log(`seed.js: Award for ${instantEd.recipientUser.name} saved, with id ${instantEd._id}\n${instantEd}`);
-
   });
 
   const nominateEd = new Nomination({
@@ -714,10 +700,6 @@ async function seedCategories() {
     releaseDate: null
   });
 
-  await nominateEd.save().then(() => {
-    console.log(`seed.js: Award for ${nominateEd.recipientUser.name} saved, with id ${nominateEd._id}\n${nominateEd}`);
-  });  
-
   const nominateKatie = new Nomination({
     _id: new mongoose.Types.ObjectId(),
     recipientUser: katieLock,
@@ -733,16 +715,174 @@ async function seedCategories() {
     releaseDate: null
   });
 
-  await nominateKatie.save().then(() => {
-    console.log(`seed.js: Award for ${nominateKatie.recipientUser.name} saved, with id ${nominateKatie._id}\n${nominateKatie}`);
-  });  
+  const nominations = [instantNate, instantEd, nominateEd, nominateKatie];
+
+  try {
+    const seedNominations = await Nomination.insertMany(nominations)
+    seedNominations.forEach(nomination => {
+      console.log(`seed.js: ${nomination.recipientUser} saved, with id ${nomination._id}\n${nomination}`);
+    });
+  } catch(error) {
+    console.log(`seed.js: ${error}`);
+  };
+
+};
+
+
+  // const instantNate = new Nomination({
+  //   _id: new mongoose.Types.ObjectId(),
+  //   recipientUser: natePicone,
+  //   nominatorFullUser: edDougherty,
+  //   nominatorBasicUser: null,
+  //   nominationValue: 'Commitment',
+  //   nominationBody: 'Nate is a great guy!',
+  //   nominationDate: '09-12-2023',
+  //   isNominatorFullUser: true,
+  //   isAward: false,
+  //   isNominationInstant: true,
+  //   isReleased: false,
+  //   releaseDate: null
+  // });
+
+  // await instantNate.save().then(() => {
+  //   console.log(`seed.js: Award for ${instantNate.recipientUser.name} saved, with id ${instantNate._id}\n${instantNate}`);
+  // });
+
+  // const instantEd = new Nomination({
+  //   _id: new mongoose.Types.ObjectId(),
+  //   recipientUser: edDougherty,
+  //   nominatorFullUser: katieLock,
+  //   nominatorBasicUser: null,
+  //   nominationValue: 'Commitment',
+  //   nominationBody: 'Ed is also a great guy!',
+  //   nominationDate: '02-12-2023',
+  //   isNominatorFullUser: true,
+  //   isAward: false,
+  //   isNominationInstant: true,
+  //   isReleased: false,
+  //   releaseDate: null
+  // });
+
+  // await instantEd.save().then(() => {
+  //   console.log(`seed.js: Award for ${instantEd.recipientUser.name} saved, with id ${instantEd._id}\n${instantEd}`);
+
+  // });
+
+  // const nominateEd = new Nomination({
+  //   _id: new mongoose.Types.ObjectId(),
+  //   recipientUser: edDougherty,
+  //   nominatorFullUser: null,
+  //   nominatorBasicUser: {
+  //     basicName: {
+  //       first: 'Naomi',
+  //       last: 'SkyCaptain',
+  //     },
+  //     basicEmail: 'naomi.skycaptain@yourcompany.com',
+  //   },
+  //   nominationValue: 'Challenging',
+  //   nominationBody: 'Ed is a challenger!',
+  //   nominationDate: '10-12-2023',
+  //   isNominationInstant: false,
+  //   isNominatorFullUser: false,
+  //   isAward: false,
+  //   isReleased: false,
+  //   releaseDate: null
+  // });
+
+  // await nominateEd.save().then(() => {
+  //   console.log(`seed.js: Award for ${nominateEd.recipientUser.name} saved, with id ${nominateEd._id}\n${nominateEd}`);
+  // });  
+
+  // const nominateKatie = new Nomination({
+  //   _id: new mongoose.Types.ObjectId(),
+  //   recipientUser: katieLock,
+  //   nominatorFullUser: edDougherty,
+  //   nominatorBasicUser: null,
+  //   nominationValue: 'Commitment',
+  //   nominationBody: 'Katie deserves this because of the thing what she did at the time.',
+  //   nominationDate: '02-11-2023',
+  //   isNominatorFullUser: true,
+  //   isAward: true,
+  //   isNominationInstant: true,
+  //   isReleased: true,
+  //   releaseDate: null
+  // });
+
+  // await nominateKatie.save().then(() => {
+  //   console.log(`seed.js: Award for ${nominateKatie.recipientUser.name} saved, with id ${nominateKatie._id}\n${nominateKatie}`);
+  // });  
 
   
 
   /* TO DO: COMMENT SEED DATA */
 
-  
+const seedComments = async () => {
+  try {
+    const instantEdComment = new Comment({
+      _id: new mongoose.Types.ObjectId(),
+      nominationId: instantEd._id,
+      commenterId: katieLock._id,
+      commentBody: 'Well deserved!'
+    });
 
-  databaseClose();
+    const instantNateComment = new Comment({
+      _id: new mongoose.Types.ObjectId(),
+      nominationId: instantNate._id,
+      commenterId: edDougherty._id,
+      commentBody: 'I agree with this nomination!'
+    });
+
+    const nominateEdComment = new Comment({
+      _id: new mongoose.Types.ObjectId(),
+      nominationId: nominateEd._id,
+      commenterId: katieLock._id,
+      commentBody: 'Well done!'
+    });
+
+    const nominateKatieComment = new Comment({
+      _id: new mongoose.Types.ObjectId(),
+      nominationId: nominateKatie._id,
+      commenterId: edDougherty._id,
+      commentBody: 'Good job!'
+    });
+
+  } catch (error) {
+    console.log(`seed.js: ${error}`);
+  }
+
+  const comments = [instantEdComment, instantNateComment, nominateEdComment, nominateKatieComment];
+
+  try {
+    const seedComments = await Comment.insertMany(comments)
+    seedComments.forEach(comment => {
+      console.log(`seed.js: ${comment.commentBody} saved, with id ${comment._id}\n${comment}`);
+    });
+  } catch(error) {
+    console.log(`seed.js: ${error}`);
+  };
+
+};
+
+
+databaseConnect().then(async () => {
+  console.log('=== seed.js executed ===');
+  console.log('seed,js: Creating user seed data!')
   
+  try {
+    await seedUsers();
+    console.log('seed.js: User seed data created!');
+    await seedCategories();
+    console.log('seed.js: Category seed data created!');
+    await seedNominations();
+    console.log('seed.js: Nomination seed data created!');
+    await seedComments();
+    console.log('seed.js: Comment seed data created!');
+  } catch(err) {
+    console.log(`seed.js: ${err}`);
+  } finally {
+    databaseClose();
+  }
+
 });
+  
+  
