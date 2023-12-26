@@ -79,10 +79,10 @@ const newCommentSchema = router.post('/post/:id', auth, async (request, response
     };
 
     const newComment = new Comment(request.body);
-    const outcome = await newComment.save();
+    const postOutcome = await newComment.save();
     
     response.json({
-      Comment: outcome
+      Comment: postOutcome
     });
     
   } catch (err) {
@@ -131,10 +131,10 @@ const updateCommentSchema = router.patch('/update/:id', auth, async (request, re
     comment.commentBody = updateBody;
 
     //save to db
-    const outcome = await comment.save();
+    const patchOutcome = await comment.save();
 
     response.json({
-      Comment: outcome
+      Comment: patchOutcome
     });
 
     // update with new string
@@ -169,10 +169,10 @@ router.delete('/delete/:id', auth, async (request, response) => {
       return response.status(403).send('You are not authorised to do that. Wash your mouth with soap.');
     }
 
-    const outcome = await Comment.findByIdAndDelete(targetComment);
+    const deleteOutcome = await Comment.findByIdAndDelete(targetComment);
     
     response.json({
-      Comment: outcome
+      Comment: deleteOutcome
     });
   } catch (err) {
     errorSwitch(err, response);
