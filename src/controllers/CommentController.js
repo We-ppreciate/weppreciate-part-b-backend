@@ -119,11 +119,6 @@ const updateCommentSchema = router.patch('/update/:id', auth, async (request, re
     if (requester.id.toString() != commenter.toString()) {
       return response.status(403).send('You are not authorised to do that. Wash your mouth with soap.');
     }
-    
-    const commenter = comment.commenterId;
-    const commentId = comment._id;
-    let commentBody = comment.commentBody
-    const requester = await User.findById(request.userId);
 
     const updateBody = request.body.commentBody;
     
