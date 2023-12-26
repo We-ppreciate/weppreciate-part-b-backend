@@ -199,8 +199,10 @@ const newUserSchema = router.post('/new', auth, async (request, response) => {
   try {
     const result = await User.findById(_id);
     const { email } = request.body;
-    const existingEmail = User.findOne({ email });
-    
+    const existingEmail = await User.findOne({ email });
+
+    console.log('email: ', { email }, 'existingEmail: ', existingEmail, 'request.body: ', request.body)
+
     if (existingEmail) {
       return response.status(400).send({ 
         status: response.status,
