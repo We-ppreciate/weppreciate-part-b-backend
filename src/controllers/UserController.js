@@ -198,6 +198,16 @@ const newUserSchema = router.post('/new', auth, async (request, response) => {
 
   try {
     const result = await User.findById(_id);
+    const { email } = request.body;
+    const existingEmail = User.findOne({ email });
+    
+    if (existingEmail) {
+      return response.status(400).send({ 
+        status: response.status,
+        error: 'That email is already in use. Please try another.' 
+      });
+    }
+
     if(!result.isAdmin) {
       return response.status(403).send({ 
         status: response.status,
