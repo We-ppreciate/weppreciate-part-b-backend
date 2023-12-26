@@ -6,6 +6,7 @@ const auth = require('../functions/verifyToken');
 const { validateNewNomination, validateUpdateNomination } = require('../validations/NominationValidation');
 const { errorSwitch } = require('./ErrorController');
 
+
   /* === NOMINATION GET ROUTES === */
 
 

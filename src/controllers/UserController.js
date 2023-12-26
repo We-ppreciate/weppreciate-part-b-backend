@@ -1,12 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const { User } = require('../models/UserModel');
-const { logToFile } = require('../functions/logToFile');
 const auth = require('../functions/verifyToken');
 const { errorSwitch } = require('./ErrorController');
 const {validateNewUser, validateUpdateSelf, validateUpdateAdmin } = require('../validations/UserValidation');
-// const _ = require('lodash');
-
 
 
 /* === USER GET ROUTES === */

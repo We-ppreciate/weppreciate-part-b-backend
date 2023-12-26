@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 require('dotenv').config(); 
-const { Nomination } = require('../models/NominationModel');
 const { User } = require('../models/UserModel');
 const { errorSwitch } = require('./ErrorController');
 const auth = require('../functions/verifyToken');
@@ -9,10 +8,7 @@ const { Comment } = require('../models/CommentModel');
 const { validateNewComment, validateUpdateComment } = require('../validations/CommentValidation');
 
 
-
 /* === COMMENT GET ROUTES === */
-
-/* AUTH REQUIRED ON ALL */
 
 
 // GET all comments in db
@@ -40,7 +36,7 @@ router.get('/all/nomination/:id', auth, async (request, response) => {
 
 // GET one comment by id
 // eg GET localhost:3000/comments/one/nomination/5f2f8e3d2b8e9a0017b0e9f0
-router.get('/one/comment/:id', async (request, response) => {
+router.get('/one/comment/:id', auth, async (request, response) => {
   try {
     const result = await Comment.findById(request.params.id);
     response.json(result);
@@ -51,7 +47,7 @@ router.get('/one/comment/:id', async (request, response) => {
 
 // GET all comments by poster user id
 // eg GET localhost:3000/comments/all/user/5f2f8e3d2b8e9a0017b0e9f0
-router.get('/all/user/:id', async (request, response) => {
+router.get('/all/user/:id', auth, async (request, response) => {
   const _id = request.params.id;
   try {
     const result = await Comment.find({ commenterId: _id });
@@ -117,6 +113,14 @@ const updateCommentSchema = router.patch('/update/:id', auth, async (request, re
     }
     
     const commenter = comment.commenterId;
+    const requester = await User.findById(request.userId);
+    
+    // check user created comment or is admin
+    if (requester.id.toString() != commenter.toString()) {
+      return response.status(403).send('You are not authorised to do that. Wash your mouth with soap.');
+    }
+    
+    const commenter = comment.commenterId;
     const commentId = comment._id;
     let commentBody = comment.commentBody
     const requester = await User.findById(request.userId);
@@ -130,6 +134,16 @@ const updateCommentSchema = router.patch('/update/:id', auth, async (request, re
 
     // update with new string
     comment.commentBody = updateBody;
+
+    //save to db
+    const outcome = await comment.save();
+
+    response.json({
+      Comment: outcome
+    });
+
+    // update with new string
+    comment.commentBody = request.body.commentBody;
 
     //save to db
     const outcome = await comment.save();

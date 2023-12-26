@@ -2,25 +2,15 @@ require('dotenv').config();
 const express = require('express');
 const router = express.Router();
 const { errorSwitch } = require('./ErrorController');
-
-// const { logToFile } = require('../functions/logToFile');
-
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models/UserModel');
 const auth = require('../functions/verifyToken');
+const { validatePassword } = require('../validations/AuthValidation');
 
 
 const jwtSecret = process.env.JWT_SECRET;
 
-router.get('/user', async (request, response) => {
-  try {
-    // Authenticate User
-    response.json(users)
-  } catch (err) {
-    errorSwitch(err, response);
-  }
-});
 
 /* === POST === */
 
@@ -71,7 +61,13 @@ router.post('/login', async (request, response) => {
 // PATCH password reset
 // Required body fields: newPassword: string
 // eg PATCH localhost:3000/auth/reset
-router.patch('/reset/:id', auth, async (request, response) => {
+const passwordResetScheme = router.patch('/reset/:id', auth, async (request, response) => {
+  const { error, value } = validatePassword(request.body);
+
+  if (error) {
+    return response.status(400).send(error.details);
+  }
+
   const requestorId = request.userId;
   const targetId = request.params.id;
   const newPassword = request.body.newPassword;
@@ -91,9 +87,7 @@ router.patch('/reset/:id', auth, async (request, response) => {
     }
 
     if (requestorId == targetId || requestor.isAdmin) {
-      const saltRounds = 10;
-      const passwordHash = bcrypt.hashSync(newPassword, saltRounds);
-      target.passwordHash = passwordHash
+      target.passwordHash = bcrypt.hashSync(newPassword, 10);
       await target.save();
   
       return response.status(200).send('Password reset successful. With great passwords come great responsibility.');
@@ -105,5 +99,6 @@ router.patch('/reset/:id', auth, async (request, response) => {
     errorSwitch(err, response);
   };
 });
+
 
 module.exports = router;
