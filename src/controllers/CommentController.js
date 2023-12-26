@@ -137,6 +137,16 @@ const updateCommentSchema = router.patch('/update/:id', auth, async (request, re
       Comment: patchOutcome
     });
 
+    // update with new string
+    comment.commentBody = request.body.commentBody;
+
+    //save to db
+    const outcome = await comment.save();
+
+    response.json({
+      Comment: outcome
+    });
+
   } catch (err) {
     errorSwitch(err, response);
   }
